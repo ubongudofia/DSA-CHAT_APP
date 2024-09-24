@@ -65,8 +65,10 @@ class _LoginPageState extends State<LoginPage> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    // Implement your login logic here
-                  },
+                // Implement your login logic here
+                // After successful login, navigate to the chat screen
+                Navigator.pushNamed(context, '/chat_screen');
+              },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 14, 95, 133),
                     padding: EdgeInsets.symmetric(vertical: 24),

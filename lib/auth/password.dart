@@ -15,6 +15,7 @@ class _PasswordSetupScreenState extends State<PasswordSetupScreen> {
     final password = _passwordController.text;
     final retypePassword = _retypePasswordController.text;
 
+    // Perform authentication check here
     if (password.isEmpty || retypePassword.isEmpty) {
       _showErrorDialog('Fields cannot be empty');
       return;
@@ -25,9 +26,9 @@ class _PasswordSetupScreenState extends State<PasswordSetupScreen> {
       return;
     }
 
-    // Proceed to the next step after successful password setup (e.g., navigating to home)
+    // If authentication is successful, navigate to the contact screen
     Navigator.pushReplacementNamed(
-        context, '/home'); // Or whatever route you want to navigate to
+        context, '/contact'); // Navigate to Contact Screen
   }
 
   void _showErrorDialog(String message) {

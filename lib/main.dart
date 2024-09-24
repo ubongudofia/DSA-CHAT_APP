@@ -10,10 +10,12 @@ import 'auth/emailotp.dart';
 import 'auth/password.dart';
 import 'login/loginpage.dart';
 import 'login/forgot_password.dart';
+import 'nav_screens/contact_screen.dart';
+import 'nav_screens/chat_screen.dart';
 
 import 'welcome.dart';
 
-Future<void> main() async {
+void main() {
   runApp(MyApp());
 }
 
@@ -33,7 +35,9 @@ class MyApp extends StatelessWidget {
         '/email': (context) => EmailScreen(),
         '/email_otp': (context) => EmailOtpScreen(),
         '/password_setup': (context) => PasswordSetupScreen(),
+        '/contact': (context) => ContactScreen(),
         '/login_page': (context) => LoginPage(),
+        '/chat_screen': (context) => ChatScreen(),
         '/forgot_password': (context) =>
             ForgotPasswordScreen(), // Add the new route
       },

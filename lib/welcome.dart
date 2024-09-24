@@ -17,7 +17,7 @@ class WelcomeScreen extends StatelessWidget {
                   width: 200,
                 ),
               ),
-              SizedBox(height: 30),
+              SizedBox(height: 40),
               Center(
                 child: Text(
                   'STARTCOM',
@@ -49,10 +49,10 @@ class WelcomeScreen extends StatelessWidget {
                   },
                   style: ButtonStyle(
                     foregroundColor:
-                        MaterialStateProperty.all<Color>(Colors.white),
-                    backgroundColor: MaterialStateProperty.all<Color>(
+                        WidgetStateProperty.all<Color>(Colors.white),
+                    backgroundColor: WidgetStateProperty.all<Color>(
                         const Color.fromARGB(255, 14, 95, 133)),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15.0),
                       ),

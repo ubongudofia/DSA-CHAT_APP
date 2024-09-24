@@ -115,10 +115,10 @@ class _RegisterState extends State<Register> {
                       },
                       style: ButtonStyle(
                         foregroundColor:
-                        MaterialStateProperty.all<Color>(Colors.white),
-                        backgroundColor: MaterialStateProperty.all<Color>(
+                            WidgetStateProperty.all<Color>(Colors.white),
+                        backgroundColor: WidgetStateProperty.all<Color>(
                             const Color.fromARGB(255, 180, 120, 190)),
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(24.0),
                           ),
