@@ -1,0 +1,82 @@
+import 'package:flutter/material.dart';
+
+class NameScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final user =
+        ModalRoute.of(context)!.settings.arguments as Map<String, String>;
+
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back), // Backward arrow icon
+            onPressed: () {
+              Navigator.pop(context); // Navigate back to the previous page
+            },
+          ),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.fromLTRB(30, 150, 30, 0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 'Name' text
+              Text(
+                'Confirm Your Registered Service Name',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 20),
+
+              // Input field with visible outline
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: TextField(
+                  controller: TextEditingController(text: user['name']),
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    labelText: 'Name',
+                  ),
+                  readOnly: true,
+                ),
+              ),
+              SizedBox(height: 400), // Pushes the button to the bottom
+
+              // Circular submit button with blue background and white arrow
+              Align(
+                alignment: Alignment.bottomRight,
+                child: FloatingActionButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/phone', arguments: user);
+                  },
+                  backgroundColor: const Color.fromARGB(255, 14, 95, 133),
+                  child: Icon(
+                    Icons.arrow_forward,
+                    color: Colors.white, // White arrow icon
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
