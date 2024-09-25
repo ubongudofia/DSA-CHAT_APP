@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 
 class ContactScreen extends StatefulWidget {
+  const ContactScreen({Key? key}) : super(key: key);
+
   @override
   _ContactScreenState createState() => _ContactScreenState();
 }
@@ -56,15 +58,15 @@ class _ContactScreenState extends State<ContactScreen> {
         backgroundColor: Colors.white, // White background for AppBar
         elevation: 0, // No shadow for AppBar
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black), // Back arrow
+          icon: const Icon(Icons.arrow_back, color: Colors.black), // Back arrow
           onPressed: () => Navigator.pop(context),
         ),
       ),
       body: Column(
         children: [
           // Centered "Contacts" title
-          Padding(
-            padding: const EdgeInsets.all(16.0),
+          const Padding(
+            padding: EdgeInsets.all(16.0),
             child: Text(
               'Contacts',
               style: TextStyle(
@@ -83,11 +85,11 @@ class _ContactScreenState extends State<ContactScreen> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                prefixIcon: Icon(Icons.search), // Search icon in the text field
+                prefixIcon: const Icon(Icons.search), // Search icon in the text field
               ),
             ),
           ),
-          SizedBox(height: 20), // Space between search bar and contacts
+          const SizedBox(height: 20), // Space between search bar and contacts
 
           // Contact list
           Expanded(
@@ -104,11 +106,11 @@ class _ContactScreenState extends State<ContactScreen> {
                       ),
                       title: Text(
                         contact['name']!,
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       subtitle: Text(
                         contact['bio']!,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontStyle: FontStyle.italic,
                           color: Colors.grey,
                         ),
@@ -117,7 +119,7 @@ class _ContactScreenState extends State<ContactScreen> {
                         onPressed: () {
                           // Add functionality here (e.g., add to favorites)
                         },
-                        child: Text('Add'),
+                        child: const Text('Add'),
                       ),
                     ),
                     Divider(color: Colors.grey[300]), // Light grey divider
@@ -155,11 +157,11 @@ class _ContactScreenState extends State<ContactScreen> {
             const Color.fromARGB(255, 14, 95, 133), // Active color (blue)
         unselectedItemColor: Colors.grey, // Inactive icons and text color
         showUnselectedLabels: true, // Show text labels for inactive items
-        selectedIconTheme: IconThemeData(
+        selectedIconTheme: const IconThemeData(
             size: 30,
             color: Color.fromARGB(
                 255, 14, 95, 133)), // Larger solid icon for active
-        unselectedIconTheme: IconThemeData(
+        unselectedIconTheme: const IconThemeData(
             size: 24, color: Colors.grey), // Regular icon for inactive
       ),
     );

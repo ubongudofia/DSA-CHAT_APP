@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class EmailScreen extends StatelessWidget {
+  const EmailScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final user =
@@ -12,7 +14,7 @@ class EmailScreen extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Colors.white,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back), // Backward arrow icon
+            icon: const Icon(Icons.arrow_back), // Backward arrow icon
             onPressed: () {
               Navigator.pop(context); // Navigate back to the previous page
             },
@@ -26,14 +28,14 @@ class EmailScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Email Label
-              Text(
+              const Text(
                 'Email',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               // Input field with read-only email
               Container(
@@ -45,13 +47,14 @@ class EmailScreen extends StatelessWidget {
                       color: Colors.grey.withOpacity(0.5),
                       spreadRadius: 2,
                       blurRadius: 5,
-                      offset: Offset(0, 3), // Shadow position
+                      offset: const Offset(0, 3), // Shadow position
                     ),
                   ],
                 ),
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: TextField(
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     border: InputBorder.none,
                     labelText: 'Enter your email',
                   ),
@@ -59,7 +62,7 @@ class EmailScreen extends StatelessWidget {
                   readOnly: true, // Email is not editable
                 ),
               ),
-              SizedBox(height: 400),
+              const SizedBox(height: 400),
 
               // Circular submit button with blue background and white arrow
               Align(
@@ -70,7 +73,7 @@ class EmailScreen extends StatelessWidget {
                     Navigator.pushNamed(context, '/email_otp', arguments: user);
                   },
                   backgroundColor: const Color.fromARGB(255, 14, 95, 133),
-                  child: Icon(
+                  child: const Icon(
                     Icons.arrow_forward,
                     color: Colors.white, // White arrow icon
                   ),

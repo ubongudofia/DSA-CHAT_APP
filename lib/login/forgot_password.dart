@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
+  const ForgotPasswordScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -9,7 +11,7 @@ class ForgotPasswordScreen extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Colors.white,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back), // Backward arrow icon
+            icon: const Icon(Icons.arrow_back), // Backward arrow icon
             onPressed: () {
               Navigator.pop(context); // Navigate back to the previous page
             },
@@ -21,7 +23,7 @@ class ForgotPasswordScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // Name input (read-only)
-              TextField(
+              const TextField(
                 decoration: InputDecoration(
                   labelText: 'Name',
                   border: OutlineInputBorder(),
@@ -31,10 +33,10 @@ class ForgotPasswordScreen extends StatelessWidget {
                 ),
                 readOnly: true,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               // Phone Number input (read-only)
-              TextField(
+              const TextField(
                 decoration: InputDecoration(
                   labelText: 'Phone Number',
                   border: OutlineInputBorder(),
@@ -44,10 +46,10 @@ class ForgotPasswordScreen extends StatelessWidget {
                 ),
                 readOnly: true,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               // Email input (read-only)
-              TextField(
+              const TextField(
                 decoration: InputDecoration(
                   labelText: 'Email',
                   border: OutlineInputBorder(),
@@ -57,7 +59,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                 ),
                 readOnly: true,
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
 
               // Full-width Recover Password button
               SizedBox(
@@ -68,9 +70,9 @@ class ForgotPasswordScreen extends StatelessWidget {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 14, 95, 133),
-                    padding: EdgeInsets.symmetric(vertical: 24),
+                    padding: const EdgeInsets.symmetric(vertical: 24),
                   ),
-                  child: Text(
+                  child: const Text(
                     'Recover Password',
                     style: TextStyle(color: Colors.white),
                   ),

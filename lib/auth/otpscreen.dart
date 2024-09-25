@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:async'; // For the countdown timer
 
 class PhoneOtpScreen extends StatefulWidget {
+  const PhoneOtpScreen({Key? key}) : super(key: key);
+
   @override
   _PhoneOtpScreenState createState() => _PhoneOtpScreenState();
 }
@@ -22,7 +24,7 @@ class _PhoneOtpScreenState extends State<PhoneOtpScreen> {
   void _startTimer() {
     _secondsRemaining = 30;
     _canResend = false;
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         if (_secondsRemaining > 0) {
           _secondsRemaining--;
@@ -60,14 +62,14 @@ class _PhoneOtpScreenState extends State<PhoneOtpScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Invalid OTP'),
-          content: Text('Please enter the complete 6-digit OTP.'),
+          title: const Text('Invalid OTP'),
+          content: const Text('Please enter the complete 6-digit OTP.'),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
               },
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         );
@@ -82,7 +84,8 @@ class _PhoneOtpScreenState extends State<PhoneOtpScreen> {
 
     // Trigger OTP resend logic here
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('OTP has been resent to your phone number!')),
+      const SnackBar(
+          content: Text('OTP has been resent to your phone number!')),
     );
   }
 
@@ -97,7 +100,7 @@ class _PhoneOtpScreenState extends State<PhoneOtpScreen> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back), // Backward arrow icon
+            icon: const Icon(Icons.arrow_back), // Backward arrow icon
             onPressed: () {
               Navigator.pop(context); // Navigate back to the previous page
             },
@@ -113,12 +116,12 @@ class _PhoneOtpScreenState extends State<PhoneOtpScreen> {
               // OTP instruction text
               Text(
                 'Enter the OTP sent to ${user['phone_number']}',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               // OTP input fields with white background and shadow
               Row(
@@ -134,7 +137,7 @@ class _PhoneOtpScreenState extends State<PhoneOtpScreen> {
                           color: Colors.grey.withOpacity(0.5),
                           spreadRadius: 2,
                           blurRadius: 5,
-                          offset: Offset(0, 3), // Shadow position
+                          offset: const Offset(0, 3), // Shadow position
                         ),
                       ],
                     ),
@@ -143,7 +146,7 @@ class _PhoneOtpScreenState extends State<PhoneOtpScreen> {
                       maxLength: 1,
                       textAlign: TextAlign.center,
                       keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         counterText: '', // Removes counter
                         border: InputBorder.none,
                       ),
@@ -151,17 +154,17 @@ class _PhoneOtpScreenState extends State<PhoneOtpScreen> {
                   );
                 }),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               // Countdown timer or Resend OTP button
               if (!_canResend) Text('Resend OTP in $_secondsRemaining seconds'),
               if (_canResend)
                 TextButton(
                   onPressed: _resendOtp,
-                  child: Text('Resend OTP'),
+                  child: const Text('Resend OTP'),
                 ),
 
-              SizedBox(height: 375),
+              const SizedBox(height: 375),
 
               // Circular submit button with blue background and white arrow
               Align(
@@ -169,7 +172,7 @@ class _PhoneOtpScreenState extends State<PhoneOtpScreen> {
                 child: FloatingActionButton(
                   onPressed: _submitOtp,
                   backgroundColor: const Color.fromARGB(255, 14, 95, 133),
-                  child: Icon(
+                  child: const Icon(
                     Icons.arrow_forward,
                     color: Colors.white, // White arrow icon
                   ),

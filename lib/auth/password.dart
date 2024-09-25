@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 
 class PasswordSetupScreen extends StatefulWidget {
+  const PasswordSetupScreen({Key? key}) : super(key: key);
+
   @override
   _PasswordSetupScreenState createState() => _PasswordSetupScreenState();
 }
@@ -36,14 +38,14 @@ class _PasswordSetupScreenState extends State<PasswordSetupScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Error'),
+          title: const Text('Error'),
           content: Text(message),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         );
@@ -62,7 +64,7 @@ class _PasswordSetupScreenState extends State<PasswordSetupScreen> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back), // Backward arrow icon
+            icon: const Icon(Icons.arrow_back), // Backward arrow icon
             onPressed: () {
               Navigator.pop(context); // Navigate back to the previous page
             },
@@ -75,7 +77,7 @@ class _PasswordSetupScreenState extends State<PasswordSetupScreen> {
             children: [
               // Name input
               TextField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Name',
                   border: OutlineInputBorder(),
                   filled: true,
@@ -85,13 +87,13 @@ class _PasswordSetupScreenState extends State<PasswordSetupScreen> {
                 controller: TextEditingController(text: user['name']),
                 readOnly: true,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               // Password input
               TextField(
                 controller: _passwordController,
                 obscureText: true,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Password',
                   border: OutlineInputBorder(),
                   filled: true,
@@ -99,13 +101,13 @@ class _PasswordSetupScreenState extends State<PasswordSetupScreen> {
                   contentPadding: EdgeInsets.all(16),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               // Re-type Password input
               TextField(
                 controller: _retypePasswordController,
                 obscureText: true,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Re-type Password',
                   border: OutlineInputBorder(),
                   filled: true,
@@ -113,7 +115,7 @@ class _PasswordSetupScreenState extends State<PasswordSetupScreen> {
                   contentPadding: EdgeInsets.all(16),
                 ),
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
 
               // Full-width Sign In button
               SizedBox(
@@ -123,9 +125,9 @@ class _PasswordSetupScreenState extends State<PasswordSetupScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(
                         255, 14, 95, 133), // Background color
-                    padding: EdgeInsets.symmetric(vertical: 24),
+                    padding: const EdgeInsets.symmetric(vertical: 24),
                   ),
-                  child: Text(
+                  child: const Text(
                     'Sign In',
                     style: TextStyle(color: Colors.white),
                   ),

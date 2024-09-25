@@ -5,7 +5,7 @@ import 'email.dart';
 class PhoneNumberScreen extends StatefulWidget {
   final Map<String, String> user;
 
-  PhoneNumberScreen({required this.user});
+  const PhoneNumberScreen({Key? key, required this.user}) : super(key: key);
 
   @override
   _PhoneNumberScreenState createState() => _PhoneNumberScreenState();
@@ -39,7 +39,7 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Invalid OTP. Please try again.')),
+        const SnackBar(content: Text('Invalid OTP. Please try again.')),
       );
     }
   }
@@ -47,7 +47,7 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Phone Number Screen')),
+      appBar: AppBar(title: const Text('Phone Number Screen')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -57,27 +57,27 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
             TextField(
               controller:
                   TextEditingController(text: widget.user['phone_number']),
-              decoration: InputDecoration(labelText: 'Phone Number'),
+              decoration: const InputDecoration(labelText: 'Phone Number'),
               readOnly: true,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             // OTP Input
             if (otpSent)
               TextField(
                 controller: _otpController,
-                decoration: InputDecoration(labelText: 'Enter OTP'),
+                decoration: const InputDecoration(labelText: 'Enter OTP'),
               ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             // Send OTP button or submit OTP button based on state
             Align(
               alignment: Alignment.bottomRight,
               child: ElevatedButton(
                 onPressed: otpSent ? submitOTP : sendOTP,
                 style: ElevatedButton.styleFrom(
-                  shape: CircleBorder(),
-                  padding: EdgeInsets.all(16),
+                  shape: const CircleBorder(),
+                  padding: const EdgeInsets.all(16),
                 ),
-                child: Icon(Icons.arrow_forward),
+                child: const Icon(Icons.arrow_forward),
               ),
             ),
           ],

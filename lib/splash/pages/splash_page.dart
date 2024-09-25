@@ -2,10 +2,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatelessWidget {
+  const SplashScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     // Simulate a 10-second splash screen delay
-    Future.delayed(Duration(seconds: 10), () {
+    Future.delayed(const Duration(seconds: 10), () {
       Navigator.pushReplacementNamed(context, '/welcome');
     });
 
@@ -24,7 +26,7 @@ class SplashScreen extends StatelessWidget {
                 height: 200,
                 width: 200,
               ),
-              SizedBox(height: 40),
+              const SizedBox(height: 40),
               //CircularProgressIndicator(),
             ],
           ),

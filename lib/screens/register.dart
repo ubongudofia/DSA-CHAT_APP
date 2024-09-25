@@ -17,20 +17,20 @@ class _RegisterState extends State<Register> {
         backgroundColor: const Color.fromARGB(255, 238, 238, 238),
         body: SafeArea(
             child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 24, horizontal: 32),
+          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 32),
           child: Column(children: [
             Align(
               alignment: Alignment.topLeft,
               child: GestureDetector(
                 onTap: () => Navigator.pop(context),
-                child: Icon(
+                child: const Icon(
                   Icons.arrow_back,
                   size: 32,
                   color: Colors.black54,
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 18,
             ),
             Container(
@@ -44,20 +44,20 @@ class _RegisterState extends State<Register> {
                 'assets/images/dsa-logo.png',
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 24,
             ),
-            Text(
+            const Text(
               'Official Service Number',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 5,
             ),
-            Text(
+            const Text(
               "Enter your service number",
               style: TextStyle(
                 fontSize: 15,
@@ -66,11 +66,11 @@ class _RegisterState extends State<Register> {
               ),
               textAlign: TextAlign.left,
             ),
-            SizedBox(
+            const SizedBox(
               height: 28,
             ),
             Container(
-              padding: EdgeInsets.all(28),
+              padding: const EdgeInsets.all(28),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
@@ -79,18 +79,18 @@ class _RegisterState extends State<Register> {
                 children: [
                   TextFormField(
                     keyboardType: TextInputType.number,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                     decoration: InputDecoration(
                       enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black12),
+                          borderSide: const BorderSide(color: Colors.black12),
                           borderRadius: BorderRadius.circular(10)),
                       focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black12),
+                          borderSide: const BorderSide(color: Colors.black12),
                           borderRadius: BorderRadius.circular(10)),
-                      prefix: Padding(
+                      prefix: const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 8),
                         child: Text(
                           '(+234)',
@@ -102,7 +102,7 @@ class _RegisterState extends State<Register> {
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 22,
                   ),
                   SizedBox(
@@ -110,7 +110,7 @@ class _RegisterState extends State<Register> {
                     child: ElevatedButton(
                       onPressed: () {
                         Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => Otp()),
+                          MaterialPageRoute(builder: (context) => const Otp()),
                         );
                       },
                       style: ButtonStyle(
@@ -124,7 +124,7 @@ class _RegisterState extends State<Register> {
                           ),
                         ),
                       ),
-                      child: Padding(
+                      child: const Padding(
                         padding: EdgeInsets.all(14.0),
                         child: Text(
                           'Send',

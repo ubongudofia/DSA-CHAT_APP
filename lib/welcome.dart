@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'auth/mockdb.dart';
 
 class WelcomeScreen extends StatelessWidget {
+  const WelcomeScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,8 +19,8 @@ class WelcomeScreen extends StatelessWidget {
                   width: 200,
                 ),
               ),
-              SizedBox(height: 40),
-              Center(
+              const SizedBox(height: 40),
+              const Center(
                 child: Text(
                   'STARTCOM',
                   style: TextStyle(
@@ -28,8 +30,8 @@ class WelcomeScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 30),
-              Center(
+              const SizedBox(height: 30),
+              const Center(
                 child: SizedBox(
                   width: 350,
                   child: Text(
@@ -41,7 +43,7 @@ class WelcomeScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 100),
+              const SizedBox(height: 100),
               Center(
                 child: ElevatedButton(
                   onPressed: () {
@@ -58,7 +60,7 @@ class WelcomeScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  child: Padding(
+                  child: const Padding(
                     padding: EdgeInsets.fromLTRB(80, 15, 80, 15),
                     child: Text(
                       'Get Started',
@@ -70,7 +72,7 @@ class WelcomeScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Center(
                   child: TextButton(
                 onPressed: () {
@@ -91,7 +93,7 @@ class WelcomeScreen extends StatelessWidget {
                     // Handle case where no user is found, perhaps show an error
                   }
                 },
-                child: Text(
+                child: const Text(
                   'Already a user? Login',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,

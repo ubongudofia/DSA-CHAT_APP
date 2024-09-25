@@ -4,7 +4,7 @@ class OtpScreen extends StatefulWidget {
   final String maskedValue; // The masked phone number or email to display
   final Function(String) onSubmitOtp; // Callback to handle OTP submission
 
-  OtpScreen({required this.maskedValue, required this.onSubmitOtp});
+  const OtpScreen({Key? key, required this.maskedValue, required this.onSubmitOtp}) : super(key: key);
 
   @override
   _OtpScreenState createState() => _OtpScreenState();
@@ -23,7 +23,7 @@ class _OtpScreenState extends State<OtpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Enter OTP')),
+      appBar: AppBar(title: const Text('Enter OTP')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -32,10 +32,10 @@ class _OtpScreenState extends State<OtpScreen> {
             // Display the instruction message
             Text(
               'Enter the OTP sent to ${widget.maskedValue}',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             // OTP input fields in white, rounded rectangular boxes
             Row(
@@ -54,7 +54,7 @@ class _OtpScreenState extends State<OtpScreen> {
                     keyboardType: TextInputType.number,
                     maxLength: 1,
                     textAlign: TextAlign.center,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       border: InputBorder.none,
                       counterText: '',
                     ),
@@ -67,22 +67,22 @@ class _OtpScreenState extends State<OtpScreen> {
                 );
               }),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             // Submit button at the bottom of the screen
-            Spacer(),
+            const Spacer(),
             Align(
               alignment: Alignment.bottomRight,
               child: ElevatedButton(
                 onPressed: submitOtp,
                 style: ElevatedButton.styleFrom(
-                  shape: CircleBorder(),
-                  padding: EdgeInsets.all(16),
+                  shape: const CircleBorder(),
+                  padding: const EdgeInsets.all(16),
                 ),
-                child: Icon(Icons.arrow_forward),
+                child: const Icon(Icons.arrow_forward),
               ),
             ),
-            SizedBox(
+            const SizedBox(
                 height:
                     40), // Adding some space to move the button towards the bottom
           ],

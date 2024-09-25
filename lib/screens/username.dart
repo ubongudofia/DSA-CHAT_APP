@@ -5,12 +5,12 @@ import 'phonenumber.dart';
 class NameScreen extends StatelessWidget {
   final Map<String, String> user;
 
-  NameScreen({required this.user});
+  const NameScreen({Key? key, required this.user}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Name Screen')),
+      appBar: AppBar(title: const Text('Name Screen')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -19,10 +19,10 @@ class NameScreen extends StatelessWidget {
             // Display the name of the user
             TextField(
               controller: TextEditingController(text: user['name']),
-              decoration: InputDecoration(labelText: 'Name'),
+              decoration: const InputDecoration(labelText: 'Name'),
               readOnly: true,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             // Submit button to move to Phone Number Screen
             Align(
               alignment: Alignment.bottomRight,
@@ -36,10 +36,10 @@ class NameScreen extends StatelessWidget {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  shape: CircleBorder(),
-                  padding: EdgeInsets.all(16),
+                  shape: const CircleBorder(),
+                  padding: const EdgeInsets.all(16),
                 ),
-                child: Icon(Icons.arrow_forward),
+                child: const Icon(Icons.arrow_forward),
               ),
             ),
           ],

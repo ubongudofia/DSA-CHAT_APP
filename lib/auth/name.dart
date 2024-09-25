@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class NameScreen extends StatelessWidget {
+  const NameScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final user =
@@ -12,7 +14,7 @@ class NameScreen extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Colors.white,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back), // Backward arrow icon
+            icon: const Icon(Icons.arrow_back), // Backward arrow icon
             onPressed: () {
               Navigator.pop(context); // Navigate back to the previous page
             },
@@ -24,14 +26,14 @@ class NameScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // 'Name' text
-              Text(
+              const Text(
                 'Confirm Your Registered Service Name',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               // Input field with visible outline
               Container(
@@ -43,21 +45,22 @@ class NameScreen extends StatelessWidget {
                       color: Colors.grey.withOpacity(0.5),
                       spreadRadius: 2,
                       blurRadius: 5,
-                      offset: Offset(0, 3),
+                      offset: const Offset(0, 3),
                     ),
                   ],
                 ),
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: TextField(
                   controller: TextEditingController(text: user['name']),
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     border: InputBorder.none,
                     labelText: 'Name',
                   ),
                   readOnly: true,
                 ),
               ),
-              SizedBox(height: 400), // Pushes the button to the bottom
+              const SizedBox(height: 400), // Pushes the button to the bottom
 
               // Circular submit button with blue background and white arrow
               Align(
@@ -67,7 +70,7 @@ class NameScreen extends StatelessWidget {
                     Navigator.pushNamed(context, '/phone', arguments: user);
                   },
                   backgroundColor: const Color.fromARGB(255, 14, 95, 133),
-                  child: Icon(
+                  child: const Icon(
                     Icons.arrow_forward,
                     color: Colors.white, // White arrow icon
                   ),

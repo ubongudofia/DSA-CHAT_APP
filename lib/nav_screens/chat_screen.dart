@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 
 class ChatScreen extends StatefulWidget {
+  const ChatScreen({Key? key}) : super(key: key);
+
   @override
   _ChatScreenState createState() => _ChatScreenState();
 }
@@ -37,15 +39,15 @@ class _ChatScreenState extends State<ChatScreen> {
         backgroundColor: Colors.white, // White background for AppBar
         elevation: 0, // No shadow for AppBar
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black), // Back arrow
+          icon: const Icon(Icons.arrow_back, color: Colors.black), // Back arrow
           onPressed: () => Navigator.pop(context),
         ),
       ),
       body: Column(
         children: [
           // Centered "Chats" title
-          Padding(
-            padding: const EdgeInsets.all(16.0),
+          const Padding(
+            padding: EdgeInsets.all(16.0),
             child: Text(
               'Chats',
               style: TextStyle(
@@ -64,11 +66,11 @@ class _ChatScreenState extends State<ChatScreen> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                prefixIcon: Icon(Icons.search), // Search icon in the text field
+                prefixIcon: const Icon(Icons.search), // Search icon in the text field
               ),
             ),
           ),
-          SizedBox(height: 20), // Space between search bar and chat list
+          const SizedBox(height: 20), // Space between search bar and chat list
 
           // Chat list
           Expanded(
@@ -89,11 +91,11 @@ class _ChatScreenState extends State<ChatScreen> {
                       ),
                       title: Text(
                         chatContact['name']!,
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       subtitle: Text(
                         chatContact['bio']!,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontStyle: FontStyle.italic,
                           color: Colors.grey,
                         ),
@@ -137,11 +139,11 @@ class _ChatScreenState extends State<ChatScreen> {
             const Color.fromARGB(255, 14, 95, 133), // Active color (blue)
         unselectedItemColor: Colors.grey, // Inactive icons and text color
         showUnselectedLabels: true, // Show text labels for inactive items
-        selectedIconTheme: IconThemeData(
+        selectedIconTheme: const IconThemeData(
             size: 30,
             color: Color.fromARGB(
                 255, 14, 95, 133)), // Larger solid icon for active
-        unselectedIconTheme: IconThemeData(
+        unselectedIconTheme: const IconThemeData(
             size: 24, color: Colors.grey), // Regular icon for inactive
       ),
     );
