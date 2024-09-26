@@ -24,7 +24,7 @@ class _ContactScreenState extends State<ContactScreen> {
         Navigator.pushNamed(context, '/call_screen');
         break;
       case 2:
-        Navigator.pushNamed(context, '/contact_screen');
+        Navigator.pushNamed(context, '/contact_screens');
         break;
       case 3:
         Navigator.pushNamed(context, '/settings_screen');
@@ -85,7 +85,8 @@ class _ContactScreenState extends State<ContactScreen> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                prefixIcon: const Icon(Icons.search), // Search icon in the text field
+                prefixIcon:
+                    const Icon(Icons.search), // Search icon in the text field
               ),
             ),
           ),

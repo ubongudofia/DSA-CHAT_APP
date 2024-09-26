@@ -67,10 +67,9 @@ class _LoginPageState extends State<LoginPage> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                // Implement your login logic here
-                // After successful login, navigate to the chat screen
-                Navigator.pushNamed(context, '/chat_screen');
-              },
+                    // Perform login authentication here
+                    Navigator.pushReplacementNamed(context, '/chat_screen');
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 14, 95, 133),
                     padding: const EdgeInsets.symmetric(vertical: 24),
@@ -86,7 +85,7 @@ class _LoginPageState extends State<LoginPage> {
               // Forgot Password button
               TextButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/forgot_password');
+                  Navigator.pushReplacementNamed(context, '/forgot_password');
                 },
                 child: const Text(
                   'Forgot Password?',

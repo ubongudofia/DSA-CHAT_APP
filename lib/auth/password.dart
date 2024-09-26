@@ -30,7 +30,7 @@ class _PasswordSetupScreenState extends State<PasswordSetupScreen> {
 
     // If authentication is successful, navigate to the contact screen
     Navigator.pushReplacementNamed(
-        context, '/contact'); // Navigate to Contact Screen
+        context, '/contact_screens'); // Navigate to Contact Screen
   }
 
   void _showErrorDialog(String message) {
