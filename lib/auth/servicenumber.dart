@@ -13,20 +13,24 @@ class _ServiceNumberScreenState extends State<ServiceNumberScreen> {
       TextEditingController();
 
   void _checkUser() {
-    final serviceNumber = _serviceNumberController.text.trim();
+    String serviceNumber = _serviceNumberController.text.trim();
 
+    // Check if the input is a valid service number
     if (serviceNumber.isEmpty) {
-      // Show error if service number input is empty
-      _showEmptyServiceNumberDialog();
+      _showEmptyServiceNumberDialog(); // Show error if empty
     } else {
+      // Add the DSA/CIV/ prefix if it is not provided
+      if (!serviceNumber.startsWith('DSA/CIV/')) {
+        serviceNumber = 'DSA/CIV/$serviceNumber';
+      }
+
       final user = MockDatabase.findUserByServiceNumber(serviceNumber);
 
-      if (user != null) {
+      if (user != null && user.isNotEmpty) {
         // User exists, navigate to the Name screen
         Navigator.pushNamed(context, '/name', arguments: user);
       } else {
-        // Show a popup message if the user does not exist
-        _showUserNotFoundDialog();
+        _showUserNotFoundDialog(); // Show a popup if the user doesn't exist
       }
     }
   }
@@ -37,7 +41,8 @@ class _ServiceNumberScreenState extends State<ServiceNumberScreen> {
       builder: (context) {
         return AlertDialog(
           title: const Text('User Not Found'),
-          content: const Text('No user found with the provided service number.'),
+          content:
+              const Text('No user found with the provided service number.'),
           actions: [
             TextButton(
               onPressed: () {
@@ -114,7 +119,8 @@ class _ServiceNumberScreenState extends State<ServiceNumberScreen> {
                     ),
                   ],
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: TextField(
                   controller: _serviceNumberController,
                   decoration: const InputDecoration(

@@ -5,8 +5,18 @@ class PhoneNumberScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Retrieve the user details passed from the previous screen
     final user =
-        ModalRoute.of(context)!.settings.arguments as Map<String, String>;
+        ModalRoute.of(context)!.settings.arguments as Map<String, String>?;
+
+    // Check if user data is available, else display an error message or fallback
+    if (user == null || user['phone'] == null) {
+      return const Scaffold(
+        body: Center(
+          child: Text('Error: User data not found.'),
+        ),
+      );
+    }
 
     return SafeArea(
       child: Scaffold(
@@ -35,7 +45,7 @@ class PhoneNumberScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
 
-              // Input field with visible outline
+              // Input field with visible outline for the read-only phone number
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -49,14 +59,15 @@ class PhoneNumberScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: TextField(
-                  controller: TextEditingController(text: user['phone_number']),
+                  controller: TextEditingController(text: user['phone']),
                   decoration: const InputDecoration(
                     border: InputBorder.none,
                     labelText: 'Phone Number',
                   ),
-                  readOnly: true,
+                  readOnly: true, // Ensures the phone number is not editable
                 ),
               ),
               const SizedBox(height: 400), // Pushes the button to the bottom

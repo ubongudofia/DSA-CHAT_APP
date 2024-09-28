@@ -11,6 +11,8 @@ class EmailOtpScreen extends StatefulWidget {
 class _EmailOtpScreenState extends State<EmailOtpScreen> {
   final List<TextEditingController> _otpControllers =
       List.generate(6, (_) => TextEditingController());
+  final List<FocusNode> _focusNodes =
+      List.generate(6, (_) => FocusNode()); // Create focus nodes
   Timer? _timer;
   int _secondsRemaining = 30; // Set the countdown timer for 30 seconds
   bool _canResend = false;
@@ -19,6 +21,13 @@ class _EmailOtpScreenState extends State<EmailOtpScreen> {
   void initState() {
     super.initState();
     _startTimer(); // Start the timer when the screen is loaded
+
+    // Add listener to each OTP input field
+    for (int i = 0; i < _otpControllers.length; i++) {
+      _otpControllers[i].addListener(() {
+        _handleOtpInput(i);
+      });
+    }
   }
 
   void _startTimer() {
@@ -39,7 +48,22 @@ class _EmailOtpScreenState extends State<EmailOtpScreen> {
   @override
   void dispose() {
     _timer?.cancel(); // Dispose the timer when the screen is destroyed
+    for (var focusNode in _focusNodes) {
+      focusNode.dispose(); // Dispose of focus nodes
+    }
     super.dispose();
+  }
+
+  void _handleOtpInput(int index) {
+    if (_otpControllers[index].text.length == 1) {
+      // Move focus to the next TextField if a digit is entered
+      if (index < _focusNodes.length - 1) {
+        FocusScope.of(context).requestFocus(_focusNodes[index + 1]);
+      }
+    } else if (_otpControllers[index].text.isEmpty && index > 0) {
+      // Move focus back to the previous TextField if the current is cleared
+      FocusScope.of(context).requestFocus(_focusNodes[index - 1]);
+    }
   }
 
   void _submitOtp() {
@@ -105,7 +129,6 @@ class _EmailOtpScreenState extends State<EmailOtpScreen> {
               Navigator.pop(context); // Navigate back to the previous page
             },
           ),
-          //title: Text('Enter Email OTP', style: TextStyle(color: Colors.black)),
           elevation: 0, // To match the flat AppBar design
         ),
         body: Padding(
@@ -144,6 +167,7 @@ class _EmailOtpScreenState extends State<EmailOtpScreen> {
                     ),
                     child: TextField(
                       controller: _otpControllers[index],
+                      focusNode: _focusNodes[index], // Set focus node
                       maxLength: 1,
                       textAlign: TextAlign.center,
                       keyboardType: TextInputType.number,

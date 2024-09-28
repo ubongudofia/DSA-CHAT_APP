@@ -35,23 +35,45 @@ class _CallScreenState extends State<CallScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
       ),
       body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text(
-              'Call Logs',
+              'Call',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
               textAlign: TextAlign.center,
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: 'Search name',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                prefixIcon:
+                    const Icon(Icons.search), // Search icon in the text field
+              ),
+            ),
+          ),
+          const SizedBox(height: 20), // Space between search bar and contacts
+
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              'Recent calls',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.left,
             ),
           ),
           // Example of call logs - replace with dynamic content
@@ -72,7 +94,6 @@ class _CallScreenState extends State<CallScreen> {
                       ),
                       subtitle: Text(contact['time']!),
                     ),
-                    Divider(color: Colors.grey[300]),
                   ],
                 );
               },

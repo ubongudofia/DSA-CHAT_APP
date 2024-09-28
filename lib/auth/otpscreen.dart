@@ -11,6 +11,7 @@ class PhoneOtpScreen extends StatefulWidget {
 class _PhoneOtpScreenState extends State<PhoneOtpScreen> {
   final List<TextEditingController> _otpControllers =
       List.generate(6, (_) => TextEditingController());
+  final List<FocusNode> _focusNodes = List.generate(6, (_) => FocusNode());
   Timer? _timer;
   int _secondsRemaining = 30; // Set the countdown timer for 30 seconds
   bool _canResend = false;
@@ -39,6 +40,7 @@ class _PhoneOtpScreenState extends State<PhoneOtpScreen> {
   @override
   void dispose() {
     _timer?.cancel(); // Dispose the timer when the screen is destroyed
+    _focusNodes.forEach((node) => node.dispose()); // Dispose focus nodes
     super.dispose();
   }
 
@@ -105,7 +107,6 @@ class _PhoneOtpScreenState extends State<PhoneOtpScreen> {
               Navigator.pop(context); // Navigate back to the previous page
             },
           ),
-          //title: Text('Enter Phone OTP', style: TextStyle(color: Colors.black)),
           elevation: 0, // To match the flat AppBar in the service number screen
         ),
         body: Padding(
@@ -143,6 +144,7 @@ class _PhoneOtpScreenState extends State<PhoneOtpScreen> {
                     ),
                     child: TextField(
                       controller: _otpControllers[index],
+                      focusNode: _focusNodes[index],
                       maxLength: 1,
                       textAlign: TextAlign.center,
                       keyboardType: TextInputType.number,
@@ -150,6 +152,13 @@ class _PhoneOtpScreenState extends State<PhoneOtpScreen> {
                         counterText: '', // Removes counter
                         border: InputBorder.none,
                       ),
+                      onChanged: (value) {
+                        if (value.isNotEmpty && index < 5) {
+                          _focusNodes[index + 1].requestFocus();
+                        } else if (value.isEmpty && index > 0) {
+                          _focusNodes[index - 1].requestFocus();
+                        }
+                      },
                     ),
                   );
                 }),

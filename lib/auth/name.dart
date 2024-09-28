@@ -5,8 +5,18 @@ class NameScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Retrieve the user details passed from the previous screen
     final user =
-        ModalRoute.of(context)!.settings.arguments as Map<String, String>;
+        ModalRoute.of(context)!.settings.arguments as Map<String, String>?;
+
+    // Check if user data is available, else display an error message or fallback
+    if (user == null || user['name'] == null) {
+      return const Scaffold(
+        body: Center(
+          child: Text('Error: User data not found.'),
+        ),
+      );
+    }
 
     return SafeArea(
       child: Scaffold(
@@ -25,7 +35,7 @@ class NameScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 'Name' text
+              // 'Confirm Your Registered Service Name' text
               const Text(
                 'Confirm Your Registered Service Name',
                 style: TextStyle(
@@ -35,7 +45,7 @@ class NameScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
 
-              // Input field with visible outline
+              // Input field with visible outline for the read-only name
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -57,7 +67,7 @@ class NameScreen extends StatelessWidget {
                     border: InputBorder.none,
                     labelText: 'Name',
                   ),
-                  readOnly: true,
+                  readOnly: true, // Ensures the name field is not editable
                 ),
               ),
               const SizedBox(height: 400), // Pushes the button to the bottom

@@ -1,9 +1,8 @@
 // lib/screens/contact_screen.dart
 import 'package:flutter/material.dart';
+import '../auth/mockdb.dart'; // Make sure to import the mock database
 
 class ContactScreen extends StatefulWidget {
-  const ContactScreen({Key? key}) : super(key: key);
-
   @override
   _ContactScreenState createState() => _ContactScreenState();
 }
@@ -24,7 +23,7 @@ class _ContactScreenState extends State<ContactScreen> {
         Navigator.pushNamed(context, '/call_screen');
         break;
       case 2:
-        Navigator.pushNamed(context, '/contact_screens');
+        Navigator.pushNamed(context, '/contact_screen');
         break;
       case 3:
         Navigator.pushNamed(context, '/settings_screen');
@@ -34,39 +33,19 @@ class _ContactScreenState extends State<ContactScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // List of contacts
-    final contacts = [
-      {
-        'name': 'John Doe',
-        'bio': 'God is good',
-        'image': 'assets/images/james.jpg', // Ensure this image exists
-      },
-      {
-        'name': 'Jane Smith',
-        'bio': 'Busy',
-        'image': 'assets/images/sophia.jpg', // Ensure this image exists
-      },
-      {
-        'name': 'Mike Johnson',
-        'bio': 'Only calls',
-        'image': 'assets/images/steven.jpg', // Ensure this image exists
-      },
-    ];
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white, // White background for AppBar
-        elevation: 0, // No shadow for AppBar
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black), // Back arrow
-          onPressed: () => Navigator.pop(context),
-        ),
+        elevation: 0,
+        automaticallyImplyLeading:
+            false, // Removes the back arrow // No shadow for AppBar
       ),
+      backgroundColor: Colors.white,
       body: Column(
         children: [
           // Centered "Contacts" title
-          const Padding(
-            padding: EdgeInsets.all(16.0),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
             child: Text(
               'Contacts',
               style: TextStyle(
@@ -85,48 +64,161 @@ class _ContactScreenState extends State<ContactScreen> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                prefixIcon:
-                    const Icon(Icons.search), // Search icon in the text field
+                prefixIcon: Icon(Icons.search), // Search icon in the text field
               ),
             ),
           ),
-          const SizedBox(height: 20), // Space between search bar and contacts
+          SizedBox(height: 20), // Space between search bar and contacts
 
           // Contact list
           Expanded(
-            child: ListView.builder(
-              itemCount: contacts.length, // Use the length of the contacts list
-              itemBuilder: (context, index) {
-                final contact = contacts[index]; // Get the current contact
-                return Column(
-                  children: [
-                    ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage: AssetImage(
-                            contact['image']!), // Use null assertion operator
-                      ),
-                      title: Text(
-                        contact['name']!,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Text(
-                        contact['bio']!,
-                        style: const TextStyle(
-                          fontStyle: FontStyle.italic,
-                          color: Colors.grey,
-                        ),
-                      ),
-                      trailing: TextButton(
-                        onPressed: () {
-                          // Add functionality here (e.g., add to favorites)
-                        },
-                        child: const Text('Add'),
-                      ),
+            child: ListView(
+              children: [
+                // Define each user without looping
+                ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: AssetImage(
+                        MockDatabase.users[0]['image']!), // First user
+                  ),
+                  title: Text(
+                    MockDatabase.users[0]['name']!,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(
+                    MockDatabase.users[0]['bio']!,
+                    style: TextStyle(
+                      fontStyle: FontStyle.italic,
+                      color: Colors.grey,
                     ),
-                    Divider(color: Colors.grey[300]), // Light grey divider
-                  ],
-                );
-              },
+                  ),
+                  trailing: TextButton(
+                    onPressed: () {
+                      // Add functionality here (e.g., add to favorites)
+                    },
+                    child: Text('Add'),
+                  ),
+                ),
+
+                ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: AssetImage(
+                        MockDatabase.users[1]['image']!), // Second user
+                  ),
+                  title: Text(
+                    MockDatabase.users[1]['name']!,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(
+                    MockDatabase.users[1]['bio']!,
+                    style: TextStyle(
+                      fontStyle: FontStyle.italic,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  trailing: TextButton(
+                    onPressed: () {
+                      // Add functionality here (e.g., add to favorites)
+                    },
+                    child: Text('Add'),
+                  ),
+                ),
+
+                ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: AssetImage(
+                        MockDatabase.users[2]['image']!), // Third user
+                  ),
+                  title: Text(
+                    MockDatabase.users[2]['name']!,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(
+                    MockDatabase.users[2]['bio']!,
+                    style: TextStyle(
+                      fontStyle: FontStyle.italic,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  trailing: TextButton(
+                    onPressed: () {
+                      // Add functionality here (e.g., add to favorites)
+                    },
+                    child: Text('Add'),
+                  ),
+                ),
+
+                ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: AssetImage(
+                        MockDatabase.users[3]['image']!), // Fourth user
+                  ),
+                  title: Text(
+                    MockDatabase.users[3]['name']!,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(
+                    MockDatabase.users[3]['bio']!,
+                    style: TextStyle(
+                      fontStyle: FontStyle.italic,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  trailing: TextButton(
+                    onPressed: () {
+                      // Add functionality here (e.g., add to favorites)
+                    },
+                    child: Text('Add'),
+                  ),
+                ),
+
+                ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: AssetImage(
+                        MockDatabase.users[4]['image']!), // Fifth user
+                  ),
+                  title: Text(
+                    MockDatabase.users[4]['name']!,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(
+                    MockDatabase.users[4]['bio']!,
+                    style: TextStyle(
+                      fontStyle: FontStyle.italic,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  trailing: TextButton(
+                    onPressed: () {
+                      // Add functionality here (e.g., add to favorites)
+                    },
+                    child: Text('Add'),
+                  ),
+                ),
+
+                ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: AssetImage(
+                        MockDatabase.users[5]['image']!), // Sixth user
+                  ),
+                  title: Text(
+                    MockDatabase.users[5]['name']!,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(
+                    MockDatabase.users[5]['bio']!,
+                    style: TextStyle(
+                      fontStyle: FontStyle.italic,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  trailing: TextButton(
+                    onPressed: () {
+                      // Add functionality here (e.g., add to favorites)
+                    },
+                    child: Text('Add'),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -158,12 +250,14 @@ class _ContactScreenState extends State<ContactScreen> {
             const Color.fromARGB(255, 14, 95, 133), // Active color (blue)
         unselectedItemColor: Colors.grey, // Inactive icons and text color
         showUnselectedLabels: true, // Show text labels for inactive items
-        selectedIconTheme: const IconThemeData(
-            size: 30,
-            color: Color.fromARGB(
-                255, 14, 95, 133)), // Larger solid icon for active
-        unselectedIconTheme: const IconThemeData(
-            size: 24, color: Colors.grey), // Regular icon for inactive
+        selectedIconTheme: IconThemeData(
+          size: 30,
+          color: Color.fromARGB(255, 14, 95, 133),
+        ), // Larger solid icon for active
+        unselectedIconTheme: IconThemeData(
+          size: 24,
+          color: Colors.grey,
+        ), // Regular icon for inactive
       ),
     );
   }

@@ -1,4 +1,3 @@
-// lib/screens/password_setup_screen.dart
 import 'package:flutter/material.dart';
 
 class PasswordSetupScreen extends StatefulWidget {
@@ -12,6 +11,8 @@ class _PasswordSetupScreenState extends State<PasswordSetupScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _retypePasswordController =
       TextEditingController();
+  final FocusNode _passwordFocusNode = FocusNode();
+  final FocusNode _retypePasswordFocusNode = FocusNode();
 
   void _signIn() {
     final password = _passwordController.text;
@@ -93,6 +94,7 @@ class _PasswordSetupScreenState extends State<PasswordSetupScreen> {
               TextField(
                 controller: _passwordController,
                 obscureText: true,
+                focusNode: _passwordFocusNode,
                 decoration: const InputDecoration(
                   labelText: 'Password',
                   border: OutlineInputBorder(),
@@ -100,6 +102,10 @@ class _PasswordSetupScreenState extends State<PasswordSetupScreen> {
                   fillColor: Colors.white,
                   contentPadding: EdgeInsets.all(16),
                 ),
+                onSubmitted: (_) {
+                  // Move focus to the next field when done
+                  FocusScope.of(context).requestFocus(_retypePasswordFocusNode);
+                },
               ),
               const SizedBox(height: 20),
 
@@ -107,6 +113,7 @@ class _PasswordSetupScreenState extends State<PasswordSetupScreen> {
               TextField(
                 controller: _retypePasswordController,
                 obscureText: true,
+                focusNode: _retypePasswordFocusNode,
                 decoration: const InputDecoration(
                   labelText: 'Re-type Password',
                   border: OutlineInputBorder(),

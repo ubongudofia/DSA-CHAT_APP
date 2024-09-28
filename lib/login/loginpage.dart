@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../auth/mockdb.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -8,15 +9,11 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    // Retrieve arguments safely, with a default empty string for 'name' if null
-    final user =
-        ModalRoute.of(context)?.settings.arguments as Map<String, String?>?;
-    final userName = user?['name'] ?? 'Unknown'; // Handle nullable name
-
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -34,8 +31,9 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Name input (read-only)
+              // Name input
               TextField(
+                controller: _nameController,
                 decoration: const InputDecoration(
                   labelText: 'Name',
                   border: OutlineInputBorder(),
@@ -43,8 +41,6 @@ class _LoginPageState extends State<LoginPage> {
                   fillColor: Colors.white,
                   contentPadding: EdgeInsets.all(16),
                 ),
-                controller: TextEditingController(text: userName),
-                readOnly: true,
               ),
               const SizedBox(height: 20),
 
@@ -67,8 +63,23 @@ class _LoginPageState extends State<LoginPage> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    // Perform login authentication here
-                    Navigator.pushReplacementNamed(context, '/chat_screen');
+                    // Retrieve the user by name
+                    final user =
+                        MockDatabase.findUserByName(_nameController.text);
+
+                    // Check if the user exists and the password matches
+                    if (user != null) {
+                      if (user['password'] == _passwordController.text) {
+                        // Navigate to the contact screen if credentials are correct
+                        Navigator.pushReplacementNamed(context, '/chat_screen');
+                      } else {
+                        // Password does not match
+                        _showErrorDialog('Incorrect password.');
+                      }
+                    } else {
+                      // User not found
+                      _showErrorDialog('User not found.');
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 14, 95, 133),
@@ -80,6 +91,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
+
               const SizedBox(height: 20),
 
               // Forgot Password button
@@ -96,6 +108,26 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       ),
+    );
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Error'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

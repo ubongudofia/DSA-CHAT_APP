@@ -1,5 +1,6 @@
 // lib/screens/chat_screen.dart
 import 'package:flutter/material.dart';
+import 'chat_detail_screen.dart'; // Assume this is the chat detail screen
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({Key? key}) : super(key: key);
@@ -11,6 +12,31 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   int _selectedIndex = 0; // Index of the current active screen (Chat)
 
+  // Sample contact data
+  final List<Map<String, String>> _contacts = [
+    {
+      'name': 'Alice',
+      'message': 'Hey, how are you?',
+      'timestamp': '10:00 AM',
+      'unreadCount': '3',
+      'image': 'assets/images/sophia.jpg',
+    },
+    {
+      'name': 'Bob',
+      'message': 'See you tomorrow!',
+      'timestamp': '09:30 AM',
+      'unreadCount': '1',
+      'image': 'assets/images/Ubong-Peters1.png',
+    },
+    {
+      'name': 'Charlie',
+      'message': 'Let\'s catch up!',
+      'timestamp': 'Yesterday',
+      'unreadCount': '5',
+      'image': 'assets/images/Paul-Emeka1.png',
+    },
+  ];
+
   // Function to handle bottom navigation bar item tap
   void _onItemTapped(int index) {
     setState(() {
@@ -18,16 +44,16 @@ class _ChatScreenState extends State<ChatScreen> {
     });
     switch (index) {
       case 0:
-        Navigator.pushNamed(context, '/chat_screen');
+        Navigator.pushNamed(context, '/chat_screen'); // Chat Screen
         break;
       case 1:
-        Navigator.pushNamed(context, '/call_screen');
+        Navigator.pushNamed(context, '/call_screen'); // Call Screen
         break;
       case 2:
-        Navigator.pushNamed(context, '/contact_screens');
+        Navigator.pushNamed(context, '/contact_screen'); // Contact Screen
         break;
       case 3:
-        Navigator.pushNamed(context, '/settings_screen');
+        Navigator.pushNamed(context, '/settings_screen'); // Settings Screen
         break;
     }
   }
@@ -36,13 +62,11 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false, // Removes the back arrow
         backgroundColor: Colors.white, // White background for AppBar
         elevation: 0, // No shadow for AppBar
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black), // Back arrow
-          onPressed: () => Navigator.pop(context),
-        ),
       ),
+      backgroundColor: Colors.white,
       body: Column(
         children: [
           // Centered "Chats" title
@@ -76,43 +100,75 @@ class _ChatScreenState extends State<ChatScreen> {
           // Chat list
           Expanded(
             child: ListView.builder(
-              itemCount: 3, // For demonstration, replace with your contact list
+              itemCount:
+                  _contacts.length, // Use the length of your contacts list
               itemBuilder: (context, index) {
-                final chatContact = {
-                  'name': 'User $index',
-                  'bio': 'Last message from User $index',
-                  'image': 'assets/images/dsa-logo.png', // Placeholder image
-                };
-                return Column(
-                  children: [
-                    ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage: AssetImage(
-                            chatContact['image']!), // Load chat contact image
-                      ),
-                      title: Text(
-                        chatContact['name']!,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Text(
-                        chatContact['bio']!,
+                final chatContact =
+                    _contacts[index]; // Access the specific contact
+                return ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: AssetImage(
+                        chatContact['image']!), // Load chat contact image
+                  ),
+                  title: Text(
+                    chatContact['name']!,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '${chatContact['message']} - ${chatContact['timestamp']}',
                         style: const TextStyle(
                           fontStyle: FontStyle.italic,
                           color: Colors.grey,
                         ),
                       ),
-                      onTap: () {
-                        // Navigate to chat detail screen if needed
-                      },
-                    ),
-                    Divider(color: Colors.grey[300]), // Light grey divider
-                  ],
+                      // Unread message count in a circular blue container
+                      if (chatContact['unreadCount'] !=
+                          '0') // Check if there are unread messages
+                        Container(
+                          padding: const EdgeInsets.all(8.0),
+                          decoration: const BoxDecoration(
+                            color: Colors.blue,
+                            shape:
+                                BoxShape.circle, // Makes the container circular
+                          ),
+                          child: Text(
+                            chatContact['unreadCount']!,
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ),
+                    ],
+                  ),
+                  onTap: () {
+                    // Navigate to chat detail screen on tap
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            ChatDetailScreen(contact: _contacts[index]),
+                      ),
+                    );
+                  },
                 );
               },
             ),
           ),
         ],
       ),
+
+      // Adding a floating action button
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Action to be performed when the button is pressed
+          // Add a new chat or navigate to a screen to start a conversation
+        },
+        backgroundColor: Colors.blue, // Blue background color
+        foregroundColor: Colors.white, // White icon color
+        child: const Icon(Icons.add), // Add icon
+      ),
+
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.grey[200], // Light grey background
         type: BottomNavigationBarType.fixed, // Fixed navigation bar
