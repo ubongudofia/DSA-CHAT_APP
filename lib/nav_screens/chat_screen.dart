@@ -37,15 +37,6 @@ class _ChatScreenState extends State<ChatScreen> {
     },
   ];
 
-  // Mock database users
-  final List<Map<String, String>> _mockUsers = [
-    {'name': 'David', 'bio: ' 'image': 'assets/images/david.jpg'},
-    {'name': 'Emily', 'image': 'assets/images/emily.jpg'},
-    {'name': 'Frank', 'image': 'assets/images/frank.jpg'},
-    {'name': 'Grace', 'image': 'assets/images/grace.jpg'},
-    {'name': 'Helen', 'image': 'assets/images/helen.jpg'},
-  ];
-
   // Function to handle bottom navigation bar item tap
   void _onItemTapped(int index) {
     setState(() {
@@ -67,7 +58,16 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  // Function to show the modal bottom sheet
+  // Mock database users
+  final List<Map<String, String>> _mockUsers = [
+    {'name': 'David', 'bio': 'busy', 'image': 'assets/images/sophia.jpg'},
+    {'name': 'Emily', 'bio': 'busy', 'image': 'assets/images/james.jpg'},
+    {'name': 'Frank', 'bio': 'busy', 'image': 'assets/images/steven.jpg'},
+    {'name': 'Grace', 'bio': 'busy', 'image': 'assets/images/greg.jpg'},
+    {'name': 'Helen', 'bio': 'busy', 'image': 'assets/images/Paul-Emeka1.png'},
+  ];
+
+  // Function to show the modal bottom sheet with users
   void _showSlidingOverlay() {
     showModalBottomSheet(
       context: context,
@@ -76,9 +76,11 @@ class _ChatScreenState extends State<ChatScreen> {
           Colors.transparent, // Transparent background for the sheet
       builder: (context) {
         return DraggableScrollableSheet(
-          expand: true,
-          initialChildSize: 0.4, // Start size (40% of the screen)
-          maxChildSize: 0.8, // Max size (80% of the screen)
+          expand: false, // Allow manual dragging without forced expansion
+          initialChildSize:
+              0.75, // Set the initial size to 75% of the screen height
+          minChildSize: 0.75, // Minimum size for sliding
+          maxChildSize: 1.0, // Maximum size for full-screen
           builder: (context, scrollController) {
             return Container(
               decoration: BoxDecoration(
@@ -122,50 +124,35 @@ class _ChatScreenState extends State<ChatScreen> {
                       // Handle settings action
                     },
                   ),
-                  // Add more options as needed
-                  // Chat list
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: _mockUsers
-                          .length, // Use the length of your contacts list
-                      itemBuilder: (context, index) {
-                        final userchat =
-                            _mockUsers[index]; // Access the specific contact
-                        return ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage: AssetImage(
-                                userchat['image']!), // Load chat contact image
-                          ),
-                          title: Text(
-                            userchat['name']!,
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          subtitle: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                '${userchat['message']} - ${userchat['timestamp']}',
-                                style: const TextStyle(
-                                  fontStyle: FontStyle.italic,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ],
-                          ),
-                          onTap: () {
-                            // Navigate to chat detail screen on tap
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ChatDetailScreen(
-                                    contact: _mockUsers[index]),
-                              ),
-                            );
-                          },
-                        );
-                      },
+                  Divider(),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      'Your Contacts',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
+                  // Display users from the contacts list in the overlay
+                  ..._mockUsers.map((contact) => ListTile(
+                        leading: CircleAvatar(
+                          backgroundImage: AssetImage(contact['image']!),
+                        ),
+                        title: Text(contact['name']!),
+                        subtitle: Text(contact['bio']!),
+                        onTap: () {
+                          // Navigate to ChatDetailScreen on contact tap
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  ChatDetailScreen(contact: contact),
+                            ),
+                          );
+                        },
+                      )),
                 ],
               ),
             );
