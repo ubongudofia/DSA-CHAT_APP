@@ -22,7 +22,10 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
       _messages.add({
         'text': _messageController.text,
         'isSent': true, // Message is from the current user
-        'timestamp': DateTime.now().toLocal().toString().substring(11, 16), // Time in HH:MM format
+        'timestamp': DateTime.now()
+            .toLocal()
+            .toString()
+            .substring(11, 16), // Time in HH:MM format
       });
     });
 
@@ -34,7 +37,10 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
         _messages.add({
           'text': 'Got your message!',
           'isSent': false, // Message is from the contact
-          'timestamp': DateTime.now().toLocal().toString().substring(11, 16), // Time in HH:MM format
+          'timestamp': DateTime.now()
+              .toLocal()
+              .toString()
+              .substring(11, 16), // Time in HH:MM format
         });
       });
     });
@@ -52,7 +58,8 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
       appBar: AppBar(
         backgroundColor: const Color(0xFF0E5F85), // Blue background color
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white), // White back arrow
+          icon: const Icon(Icons.arrow_back,
+              color: Colors.white), // White back arrow
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -60,7 +67,8 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
         title: Row(
           children: [
             CircleAvatar(
-              backgroundImage: AssetImage(widget.contact['image']!), // Contact image
+              backgroundImage:
+                  AssetImage(widget.contact['image']!), // Contact image
             ),
             const SizedBox(width: 10),
             Text(
@@ -135,7 +143,8 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
 
           // Message input field and send button
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
             decoration: const BoxDecoration(
               color: Color(0xFFEDF2FA), // Background color hex #EDF2FA
             ),

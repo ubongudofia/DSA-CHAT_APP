@@ -37,6 +37,15 @@ class _ChatScreenState extends State<ChatScreen> {
     },
   ];
 
+  // Mock database users
+  final List<Map<String, String>> _mockUsers = [
+    {'name': 'David', 'bio: ' 'image': 'assets/images/david.jpg'},
+    {'name': 'Emily', 'image': 'assets/images/emily.jpg'},
+    {'name': 'Frank', 'image': 'assets/images/frank.jpg'},
+    {'name': 'Grace', 'image': 'assets/images/grace.jpg'},
+    {'name': 'Helen', 'image': 'assets/images/helen.jpg'},
+  ];
+
   // Function to handle bottom navigation bar item tap
   void _onItemTapped(int index) {
     setState(() {
@@ -56,6 +65,114 @@ class _ChatScreenState extends State<ChatScreen> {
         Navigator.pushNamed(context, '/settings_screen'); // Settings Screen
         break;
     }
+  }
+
+  // Function to show the modal bottom sheet
+  void _showSlidingOverlay() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true, // Make it slide all the way up
+      backgroundColor:
+          Colors.transparent, // Transparent background for the sheet
+      builder: (context) {
+        return DraggableScrollableSheet(
+          expand: true,
+          initialChildSize: 0.4, // Start size (40% of the screen)
+          maxChildSize: 0.8, // Max size (80% of the screen)
+          builder: (context, scrollController) {
+            return Container(
+              decoration: BoxDecoration(
+                color: Colors.white, // White background for the sheet
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
+              ),
+              child: ListView(
+                controller: scrollController,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      'New Chat Options',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.person_add, color: Colors.blue),
+                    title: Text('New Contact'),
+                    onTap: () {
+                      // Handle new contact action
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.group, color: Colors.blue),
+                    title: Text('New Group'),
+                    onTap: () {
+                      // Handle new group action
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.settings, color: Colors.blue),
+                    title: Text('Settings'),
+                    onTap: () {
+                      // Handle settings action
+                    },
+                  ),
+                  // Add more options as needed
+                  // Chat list
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: _mockUsers
+                          .length, // Use the length of your contacts list
+                      itemBuilder: (context, index) {
+                        final userchat =
+                            _mockUsers[index]; // Access the specific contact
+                        return ListTile(
+                          leading: CircleAvatar(
+                            backgroundImage: AssetImage(
+                                userchat['image']!), // Load chat contact image
+                          ),
+                          title: Text(
+                            userchat['name']!,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          subtitle: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                '${userchat['message']} - ${userchat['timestamp']}',
+                                style: const TextStyle(
+                                  fontStyle: FontStyle.italic,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
+                          ),
+                          onTap: () {
+                            // Navigate to chat detail screen on tap
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ChatDetailScreen(
+                                    contact: _mockUsers[index]),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -160,10 +277,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
       // Adding a floating action button
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Action to be performed when the button is pressed
-          // Add a new chat or navigate to a screen to start a conversation
-        },
+        onPressed: _showSlidingOverlay,
         backgroundColor: Colors.blue, // Blue background color
         foregroundColor: Colors.white, // White icon color
         child: const Icon(Icons.add), // Add icon
