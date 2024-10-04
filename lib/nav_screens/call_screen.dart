@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './video_call_screen.dart';
 
 class CallScreen extends StatefulWidget {
   @override
@@ -196,18 +197,6 @@ class _CallScreenState extends State<CallScreen> {
     );
   }
 
-  // Navigation to the detailed call screen
-  void _navigateToCallScreen(
-      BuildContext context, String callType, String userName) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) =>
-            DetailedCallScreen(callType: callType, userName: userName),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -295,17 +284,45 @@ class _CallScreenState extends State<CallScreen> {
                       Row(
                         children: [
                           IconButton(
-                            icon: Icon(Icons.call),
-                            color: Colors.green,
-                            onPressed: () => _navigateToCallScreen(
-                                context, 'audio', callLog['name']!),
+                            icon: Icon(Icons.call,
+                                color: Colors.green), // The video call icon
+                            onPressed: () {
+                              // Assuming `selectedUser` is the user currently selected or in the call
+                              String userName =
+                                  callLog['name']!; // Get the name dynamically
+
+                              // Navigate to VideoCallScreen with the dynamically retrieved name
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => VideoCallScreen(
+                                    userName: userName,
+                                    callStatus: 'Calling',
+                                  ),
+                                ),
+                              );
+                            },
                           ),
+
                           const SizedBox(width: 10),
+                          // Your current call screen
                           IconButton(
-                            icon: Icon(Icons.videocam),
-                            color: Colors.blue,
-                            onPressed: () => _navigateToCallScreen(
-                                context, 'video', callLog['name']!),
+                            icon: Icon(Icons.videocam,
+                                color: Colors.blue), // Video call button
+                            onPressed: () {
+                              String userName = callLog['name']!;
+
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => VideoCallScreen(
+                                    userName: userName,
+                                    callStatus:
+                                        'Calling', // Example: Change status as needed
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                         ],
                       ),
@@ -320,30 +337,42 @@ class _CallScreenState extends State<CallScreen> {
       backgroundColor: Colors.white,
       floatingActionButton: FloatingActionButton(
         onPressed: () => _openSlidingUpModal(context),
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.blue,
         child: Icon(Icons.add_call, color: Colors.white),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: [
+        backgroundColor: Colors.grey[200], // Light grey background
+        type: BottomNavigationBarType.fixed, // Fixed navigation bar
+        items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.chat),
-            label: 'Chats',
+            label: 'Chat',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.call),
-            label: 'Calls',
+            label: 'Call',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.contacts),
-            label: 'Contacts',
+            label: 'Contact',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
             label: 'Settings',
           ),
         ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
+        currentIndex: _selectedIndex, // The current active index
+        onTap: _onItemTapped, // Handle item tap
+        selectedItemColor:
+            const Color.fromARGB(255, 14, 95, 133), // Active color (blue)
+        unselectedItemColor: Colors.grey, // Inactive icons and text color
+        showUnselectedLabels: true, // Show text labels for inactive items
+        selectedIconTheme: const IconThemeData(
+            size: 30,
+            color: Color.fromARGB(
+                255, 14, 95, 133)), // Larger solid icon for active
+        unselectedIconTheme: const IconThemeData(
+            size: 24, color: Colors.grey), // Regular icon for inactive
       ),
     );
   }
@@ -360,24 +389,5 @@ class _CallScreenState extends State<CallScreen> {
       default:
         return Colors.grey;
     }
-  }
-}
-
-class DetailedCallScreen extends StatelessWidget {
-  final String callType;
-  final String userName;
-
-  const DetailedCallScreen({required this.callType, required this.userName});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('$callType Call with $userName'),
-      ),
-      body: Center(
-        child: Text('Call Details for $userName ($callType)'),
-      ),
-    );
   }
 }
