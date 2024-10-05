@@ -3,8 +3,13 @@ import 'package:flutter/material.dart';
 class VideoCallScreen extends StatelessWidget {
   final String userName; // Username passed to the screen
   final String callStatus; // Call status (Calling, Ringing)
+  final String videoImage; // Image to display as avatar
 
-  VideoCallScreen({required this.userName, this.callStatus = 'Calling'});
+  VideoCallScreen({
+    required this.userName,
+    this.callStatus = 'Calling',
+    required this.videoImage,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -17,8 +22,7 @@ class VideoCallScreen extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(
-                    'assets/images/Sophia.jpg'), // Replace with your image path
+                image: AssetImage(videoImage), // Replace with your image path
                 fit: BoxFit.cover,
               ),
             ),
@@ -29,6 +33,7 @@ class VideoCallScreen extends StatelessWidget {
             children: [
               // AppBar with user's name and status
               AppBar(
+                automaticallyImplyLeading: false, // Removes the back arrow
                 backgroundColor: Colors.transparent, // Transparent background
                 elevation: 0, // No shadow
                 title: Column(

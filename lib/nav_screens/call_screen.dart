@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import './video_call_screen.dart';
+import './audio_call_screen.dart';
 
 class CallScreen extends StatefulWidget {
   @override
@@ -295,7 +296,8 @@ class _CallScreenState extends State<CallScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => VideoCallScreen(
+                                  builder: (context) => AudioCallScreen(
+                                    audioImage: callLog['image']!,
                                     userName: userName,
                                     callStatus: 'Calling',
                                   ),
@@ -316,6 +318,7 @@ class _CallScreenState extends State<CallScreen> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => VideoCallScreen(
+                                    videoImage: callLog['image']!,
                                     userName: userName,
                                     callStatus:
                                         'Calling', // Example: Change status as needed

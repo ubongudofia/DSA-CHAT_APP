@@ -1,5 +1,7 @@
 // lib/screens/chat_detail_screen.dart
 import 'package:flutter/material.dart';
+import './audio_call_screen.dart';
+import './video_call_screen.dart';
 
 class ChatDetailScreen extends StatefulWidget {
   final Map<String, String> contact; // The specific contact details
@@ -79,15 +81,40 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.videocam_outlined, color: Colors.white),
+            icon: const Icon(Icons.call_outlined, color: Colors.white),
             onPressed: () {
-              // Handle video call tap
+              String userName = widget.contact['name']!;
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AudioCallScreen(
+                    audioImage: widget.contact['image']!,
+                    userName: userName,
+                    callStatus: 'Calling', // Example: Change status as needed
+                  ),
+                ),
+              );
             },
           ),
           IconButton(
-            icon: const Icon(Icons.call_outlined, color: Colors.white),
+            icon: const Icon(Icons.videocam_outlined, color: Colors.white),
             onPressed: () {
-              // Handle audio call tap
+              // Assuming `selectedUser` is the user currently selected or in the call
+              String userName =
+                  widget.contact['name']!; // Get the name dynamically
+
+              // Navigate to VideoCallScreen with the dynamically retrieved name
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => VideoCallScreen(
+                    videoImage: widget.contact['image']!,
+                    userName: userName,
+                    callStatus: 'Calling',
+                  ),
+                ),
+              );
             },
           ),
         ],
