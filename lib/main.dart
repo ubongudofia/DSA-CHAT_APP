@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dsa_messaging_app/splash/pages/splash_page.dart';
+// import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 import 'auth/servicenumber.dart';
 import 'auth/name.dart';

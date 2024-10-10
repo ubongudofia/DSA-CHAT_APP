@@ -22,7 +22,7 @@ class WelcomeScreen extends StatelessWidget {
               const SizedBox(height: 40),
               const Center(
                 child: Text(
-                  'STARTCOM',
+                  'AFNCOM',
                   style: TextStyle(
                     fontSize: 40,
                     fontWeight: FontWeight.bold,

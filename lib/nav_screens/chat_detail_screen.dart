@@ -1,10 +1,18 @@
-// lib/screens/chat_detail_screen.dart
+import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:path_provider/path_provider.dart'; // Not supported for web
+import 'package:record/record.dart'; // Not supported for web
+import 'package:audioplayers/audioplayers.dart'; // For playing audio on both web and mobile
+import 'package:path/path.dart' as p;
+//import 'package:record/record.dart';
+
 import './audio_call_screen.dart';
 import './video_call_screen.dart';
 
 class ChatDetailScreen extends StatefulWidget {
-  final Map<String, String> contact; // The specific contact details
+  final Map<String, String> contact;
 
   const ChatDetailScreen({Key? key, required this.contact}) : super(key: key);
 
@@ -14,7 +22,100 @@ class ChatDetailScreen extends StatefulWidget {
 
 class _ChatDetailScreenState extends State<ChatDetailScreen> {
   final TextEditingController _messageController = TextEditingController();
-  final List<Map<String, dynamic>> _messages = []; // List to store messages
+  final List<Map<String, dynamic>> _messages = [];
+  final AudioPlayer _audioPlayer = AudioPlayer(); // For playback
+  String? recordingPath;
+  bool _isRecording = false;
+  bool _isPlaying = false; // Track whether the audio is playing
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  // Function to start/stop audio recording
+  Future<void> _toggleRecording() async {
+    if (kIsWeb) {
+      // Web doesn't support audio recording with `record` package
+      print("Audio recording is not supported on the web.");
+      return;
+    }
+
+    // Handle recording for mobile (non-web)
+    if (_isRecording) {
+      final path = await AudioRecorder().stop();
+      if (path != null) {
+        setState(() {
+          _isRecording = false;
+          recordingPath = path;
+          _messages.add({
+            'type': 'audio',
+            'filePath': path,
+            'isSent': true,
+            'timestamp': DateTime.now().toLocal().toString().substring(11, 16),
+          });
+        });
+      }
+    } else {
+      // Request microphone permissions and start recording
+      if (await AudioRecorder().hasPermission()) {
+        final Directory appDocumentsDir =
+            await getApplicationDocumentsDirectory();
+        final String filePath =
+            p.join(appDocumentsDir.path, "recording.m4a"); // Changed to .m4a
+
+        await AudioRecorder().start(
+          RecordConfig(),
+          path: filePath,
+        );
+        setState(() {
+          _isRecording = true;
+          recordingPath = null;
+        });
+      }
+    }
+  }
+
+  // Function to play the audio file
+  Future<void> _playAudio(String filePath) async {
+    try {
+      if (_isPlaying) {
+        await _audioPlayer.pause();
+      } else {
+        await _audioPlayer
+            .setSourceUrl(filePath); // Set the source as a local file
+        await _audioPlayer.resume(); // Start playing the audio
+      }
+      setState(() {
+        _isPlaying = !_isPlaying; // Toggle play/pause state
+      });
+    } catch (e) {
+      print('Error playing audio: $e');
+    }
+  }
+
+  // Function to handle file attachments
+  Future<void> _pickFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['jpg', 'jpeg', 'png', 'mp4', 'pdf', 'docx', 'xlsx'],
+    );
+
+    if (result != null && result.files.first.path != null) {
+      PlatformFile file = result.files.first;
+      setState(() {
+        _messages.add({
+          'text': file.name,
+          'isSent': true,
+          'type': 'file',
+          'filePath': file.path,
+          'timestamp': DateTime.now().toLocal().toString().substring(11, 16),
+        });
+      });
+    } else {
+      print('No file selected');
+    }
+  }
 
   // Function to simulate message sending
   void _sendMessage() {
@@ -23,26 +124,21 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
     setState(() {
       _messages.add({
         'text': _messageController.text,
-        'isSent': true, // Message is from the current user
-        'timestamp': DateTime.now()
-            .toLocal()
-            .toString()
-            .substring(11, 16), // Time in HH:MM format
+        'isSent': true,
+        'type': 'text',
+        'timestamp': DateTime.now().toLocal().toString().substring(11, 16),
       });
     });
 
     _messageController.clear();
 
-    // Simulate a response from the contact after a short delay
     Future.delayed(const Duration(seconds: 1), () {
       setState(() {
         _messages.add({
           'text': 'Got your message!',
-          'isSent': false, // Message is from the contact
-          'timestamp': DateTime.now()
-              .toLocal()
-              .toString()
-              .substring(11, 16), // Time in HH:MM format
+          'isSent': false,
+          'type': 'text',
+          'timestamp': DateTime.now().toLocal().toString().substring(11, 16),
         });
       });
     });
@@ -51,6 +147,8 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
   @override
   void dispose() {
     _messageController.dispose();
+    _audioPlayer
+        .dispose(); // Dispose of the AudioPlayer when the screen is closed
     super.dispose();
   }
 
@@ -58,10 +156,9 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFF0E5F85), // Blue background color
+        backgroundColor: const Color(0xFF0E5F85),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back,
-              color: Colors.white), // White back arrow
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -69,13 +166,12 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
         title: Row(
           children: [
             CircleAvatar(
-              backgroundImage:
-                  AssetImage(widget.contact['image']!), // Contact image
+              backgroundImage: AssetImage(widget.contact['image']!),
             ),
             const SizedBox(width: 10),
             Text(
-              widget.contact['name']!, // Contact name
-              style: const TextStyle(color: Colors.white), // White text color
+              widget.contact['name']!,
+              style: const TextStyle(color: Colors.white),
             ),
           ],
         ),
@@ -84,14 +180,13 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
             icon: const Icon(Icons.call_outlined, color: Colors.white),
             onPressed: () {
               String userName = widget.contact['name']!;
-
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => AudioCallScreen(
                     audioImage: widget.contact['image']!,
                     userName: userName,
-                    callStatus: 'Calling', // Example: Change status as needed
+                    callStatus: 'Calling',
                   ),
                 ),
               );
@@ -100,11 +195,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
           IconButton(
             icon: const Icon(Icons.videocam_outlined, color: Colors.white),
             onPressed: () {
-              // Assuming `selectedUser` is the user currently selected or in the call
-              String userName =
-                  widget.contact['name']!; // Get the name dynamically
-
-              // Navigate to VideoCallScreen with the dynamically retrieved name
+              String userName = widget.contact['name']!;
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -123,98 +214,142 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
         children: [
           Expanded(
             child: Container(
-              color: Colors.white, // White background for chat body
+              color: Colors.white,
               child: ListView.builder(
-                itemCount: _messages.length, // Number of messages
-                reverse: true, // Show the latest message at the bottom
+                itemCount: _messages.length,
+                reverse: true,
                 itemBuilder: (context, index) {
                   final message = _messages[_messages.length - 1 - index];
-                  return Align(
-                    alignment: message['isSent']
-                        ? Alignment.centerRight
-                        : Alignment.centerLeft,
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 5, horizontal: 10),
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: message['isSent']
-                            ? const Color.fromARGB(255, 14, 95, 133)
-                            : Colors.grey[300],
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
+                  if (message['type'] == 'audio') {
+                    return Align(
+                      alignment: message['isSent']
+                          ? Alignment.centerRight
+                          : Alignment.centerLeft,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(
-                            message['text'],
-                            style: TextStyle(
-                                color: message['isSent']
-                                    ? Colors.white
-                                    : Colors.black),
+                          IconButton(
+                            icon: Icon(
+                                _isPlaying ? Icons.pause : Icons.play_arrow),
+                            onPressed: () {
+                              _playAudio(message['filePath']);
+                            },
                           ),
-                          const SizedBox(height: 5),
                           Text(
                             message['timestamp'],
-                            style: const TextStyle(
-                                fontSize: 10, color: Colors.white70),
+                            style: TextStyle(
+                              color: message['isSent']
+                                  ? Colors.white54
+                                  : Colors.black54,
+                              fontSize: 10,
+                            ),
                           ),
                         ],
                       ),
-                    ),
-                  );
+                    );
+                  } else if (message['type'] == 'file') {
+                    return Align(
+                      alignment: message['isSent']
+                          ? Alignment.centerRight
+                          : Alignment.centerLeft,
+                      child: TextButton(
+                        onPressed: () {
+                          // Open the file
+                        },
+                        child: Text(
+                          message['text'],
+                          style: TextStyle(
+                            color:
+                                message['isSent'] ? Colors.blue : Colors.black,
+                          ),
+                        ),
+                      ),
+                    );
+                  } else {
+                    return Align(
+                      alignment: message['isSent']
+                          ? Alignment.centerRight
+                          : Alignment.centerLeft,
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 5, horizontal: 10),
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: message['isSent']
+                              ? const Color.fromARGB(255, 14, 95, 133)
+                              : Colors.grey[300],
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              message['text'],
+                              style: TextStyle(
+                                color: message['isSent']
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
+                            ),
+                            const SizedBox(height: 5),
+                            Text(
+                              message['timestamp'],
+                              style: const TextStyle(
+                                color: Colors.white54,
+                                fontSize: 10,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
                 },
               ),
             ),
           ),
+          _buildMessageInput(),
+        ],
+      ),
+    );
+  }
 
-          // Message input field and send button
-          Container(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
-            decoration: const BoxDecoration(
-              color: Color(0xFFEDF2FA), // Background color hex #EDF2FA
+  Widget _buildMessageInput() {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      color: Colors.white,
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: _messageController,
+              decoration: InputDecoration(
+                contentPadding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                hintText: 'Type a message',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  borderSide: BorderSide.none,
+                ),
+                filled: true,
+                fillColor: Colors.grey[200],
+              ),
             ),
-            child: Row(
-              children: [
-                // Attachment icon
-                IconButton(
-                  icon: const Icon(Icons.attach_file_outlined),
-                  onPressed: () {
-                    // Handle attachment
-                  },
-                ),
-                // Recording icon
-                IconButton(
-                  icon: const Icon(Icons.mic_none_outlined),
-                  onPressed: () {
-                    // Handle voice recording
-                  },
-                ),
-                // Text input field
-                Expanded(
-                  child: TextField(
-                    controller: _messageController,
-                    decoration: InputDecoration(
-                      hintText: 'Type a message',
-                      contentPadding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 16),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                // Send button
-                FloatingActionButton(
-                  onPressed: _sendMessage,
-                  mini: true,
-                  backgroundColor: const Color.fromARGB(255, 14, 95, 133),
-                  child: const Icon(Icons.send, color: Colors.white),
-                ),
-              ],
-            ),
+          ),
+          const SizedBox(width: 10),
+          IconButton(
+            icon: const Icon(Icons.attach_file, color: Colors.black54),
+            onPressed: _pickFile,
+          ),
+          const SizedBox(width: 5),
+          IconButton(
+            icon: const Icon(Icons.mic, color: Colors.black54),
+            onPressed: _toggleRecording,
+          ),
+          const SizedBox(width: 5),
+          IconButton(
+            icon: const Icon(Icons.send, color: Color(0xFF0E5F85)),
+            onPressed: _sendMessage,
           ),
         ],
       ),
