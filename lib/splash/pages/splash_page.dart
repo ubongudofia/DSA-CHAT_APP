@@ -1,35 +1,30 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    // Simulate a 10-second splash screen delay
-    Future.delayed(const Duration(seconds: 10), () {
+  _SplashScreenState createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Navigate to Welcome screen after 3 seconds
+    Timer(const Duration(seconds: 5), () {
       Navigator.pushReplacementNamed(context, '/welcome');
     });
+  }
 
-    return Scaffold(
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
       body: Center(
-        child: SingleChildScrollView(
-          // Wrap content in a scrollable view
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                  height: MediaQuery.of(context).size.height *
-                      0.2), // Add spacing to center content
-              Image.asset(
-                'assets/images/dsa-logo.png',
-                height: 200,
-                width: 200,
-              ),
-              const SizedBox(height: 40),
-              //CircularProgressIndicator(),
-            ],
-          ),
+        child: Image(
+          image: AssetImage(
+              'assets/images/dsa-logo.png'), // Ensure image path is correct
         ),
       ),
     );

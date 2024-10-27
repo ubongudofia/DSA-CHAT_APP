@@ -224,7 +224,7 @@ class _ContactScreenState extends State<ContactScreen> {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.grey[200], // Light grey background
+        backgroundColor: const Color(0xFFEDF2FA), // Light grey background
         type: BottomNavigationBarType.fixed, // Fixed navigation bar
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(

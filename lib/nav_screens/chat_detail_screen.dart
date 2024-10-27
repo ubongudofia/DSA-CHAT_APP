@@ -1,15 +1,17 @@
-import 'dart:io';
+import 'dart:io' if (kIsWeb) 'dart:html'; // Handles platform compatibility
+import 'dart:typed_data';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart'; // Not supported for web
-import 'package:record/record.dart'; // Not supported for web
+import 'package:record/record.dart'; // Correct package usage
 import 'package:audioplayers/audioplayers.dart'; // For playing audio on both web and mobile
 import 'package:path/path.dart' as p;
-//import 'package:record/record.dart';
 
 import './audio_call_screen.dart';
 import './video_call_screen.dart';
+import './contact_info.dart';
 
 class ChatDetailScreen extends StatefulWidget {
   final Map<String, String> contact;
@@ -21,6 +23,7 @@ class ChatDetailScreen extends StatefulWidget {
 }
 
 class _ChatDetailScreenState extends State<ChatDetailScreen> {
+  final ScrollController _scrollController = ScrollController();
   final TextEditingController _messageController = TextEditingController();
   final List<Map<String, dynamic>> _messages = [];
   final AudioPlayer _audioPlayer = AudioPlayer(); // For playback
@@ -31,12 +34,20 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
   @override
   void initState() {
     super.initState();
+    _scrollToBottom();
   }
 
-  // Function to start/stop audio recording
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.jumpTo(_scrollController.position.minScrollExtent);
+      }
+    });
+  }
+
+// Function to start/stop audio recording
   Future<void> _toggleRecording() async {
     if (kIsWeb) {
-      // Web doesn't support audio recording with `record` package
       print("Audio recording is not supported on the web.");
       return;
     }
@@ -62,12 +73,10 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
         final Directory appDocumentsDir =
             await getApplicationDocumentsDirectory();
         final String filePath =
-            p.join(appDocumentsDir.path, "recording.m4a"); // Changed to .m4a
+            p.join(appDocumentsDir.path, "recording.m4a"); // Use .m4a
 
-        await AudioRecorder().start(
-          RecordConfig(),
-          path: filePath,
-        );
+        // Start recording, passing the file path as the first positional argument
+        await AudioRecorder().start(filePath as RecordConfig, path: '');
         setState(() {
           _isRecording = true;
           recordingPath = null;
@@ -82,8 +91,11 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
       if (_isPlaying) {
         await _audioPlayer.pause();
       } else {
-        await _audioPlayer
-            .setSourceUrl(filePath); // Set the source as a local file
+        if (kIsWeb) {
+          await _audioPlayer.setSourceUrl(filePath); // For web
+        } else {
+          await _audioPlayer.setSourceDeviceFile(filePath); // For mobile
+        }
         await _audioPlayer.resume(); // Start playing the audio
       }
       setState(() {
@@ -94,54 +106,121 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
     }
   }
 
-  // Function to handle file attachments
+// Function to handle file attachments
+
   Future<void> _pickFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['jpg', 'jpeg', 'png', 'mp4', 'pdf', 'docx', 'xlsx'],
+      type: FileType.any,
+      allowMultiple: true,
     );
 
-    if (result != null && result.files.first.path != null) {
-      PlatformFile file = result.files.first;
-      setState(() {
+    if (result != null) {
+      final fileName = result.files.first.name;
+
+      if (kIsWeb) {
+        final fileBytes = result.files.first.bytes; // Use this for web
+
+        if (fileBytes != null) {
+          setState(() {
+            _handleFileDisplay(
+                fileBytes: fileBytes, fileName: fileName); // For web
+          });
+        }
+      } else {
+        final filePath = result.files.first.path; // Use this for mobile
+
+        if (filePath != null) {
+          setState(() {
+            _handleFileDisplay(
+                filePath: filePath, fileName: fileName); // For mobile
+          });
+        }
+      }
+    }
+  }
+
+// Handle file display or processing
+  void _handleFileDisplay(
+      {Uint8List? fileBytes, String? filePath, required String fileName}) {
+    String? fileFormat = p.extension(fileName).toUpperCase();
+    String timestamp = DateTime.now().toLocal().toString().substring(11, 16);
+
+    if (kIsWeb && fileBytes != null) {
+      // Handle file display for web using fileBytes
+      if (['.JPG', '.JPEG', '.PNG'].contains(fileFormat)) {
         _messages.add({
-          'text': file.name,
-          'isSent': true,
-          'type': 'file',
-          'filePath': file.path,
-          'timestamp': DateTime.now().toLocal().toString().substring(11, 16),
+          'type': 'image',
+          'fileBytes': fileBytes, // Use bytes for images on web
+          'fileName': fileName,
+          'timestamp': timestamp,
         });
-      });
-    } else {
-      print('No file selected');
+      } else if (fileFormat == '.MP4') {
+        _messages.add({
+          'type': 'video',
+          'fileBytes': fileBytes, // Use bytes for videos on web
+          'fileName': fileName,
+          'timestamp': timestamp,
+        });
+      } else if (['.PDF', '.DOCX', '.XLSX'].contains(fileFormat)) {
+        _messages.add({
+          'type': 'document',
+          'fileBytes': fileBytes, // Use bytes for documents on web
+          'fileName': fileName,
+          'timestamp': timestamp,
+        });
+      }
+    } else if (!kIsWeb && filePath != null) {
+      // Handle file display for mobile using filePath
+      if (['.JPG', '.JPEG', '.PNG'].contains(fileFormat)) {
+        _messages.add({
+          'type': 'image',
+          'filePath': filePath, // Use path for images on mobile
+          'timestamp': timestamp,
+        });
+      } else if (fileFormat == '.MP4') {
+        _messages.add({
+          'type': 'video',
+          'filePath': filePath, // Use path for videos on mobile
+          'fileName': fileName,
+          'timestamp': timestamp,
+        });
+      } else if (['.PDF', '.DOCX', '.XLSX'].contains(fileFormat)) {
+        _messages.add({
+          'type': 'document',
+          'filePath': filePath, // Use path for documents on mobile
+          'fileName': fileName,
+          'timestamp': timestamp,
+        });
+      }
     }
   }
 
   // Function to simulate message sending
   void _sendMessage() {
-    if (_messageController.text.isEmpty) return;
-
-    setState(() {
-      _messages.add({
-        'text': _messageController.text,
-        'isSent': true,
-        'type': 'text',
-        'timestamp': DateTime.now().toLocal().toString().substring(11, 16),
-      });
-    });
-
-    _messageController.clear();
-
-    Future.delayed(const Duration(seconds: 1), () {
+    final text = _messageController.text.trim();
+    if (text.isNotEmpty) {
       setState(() {
         _messages.add({
-          'text': 'Got your message!',
-          'isSent': false,
+          'text': text,
+          'isSent': true,
           'type': 'text',
           'timestamp': DateTime.now().toLocal().toString().substring(11, 16),
         });
       });
-    });
+      _messageController.clear();
+
+      // Add the "Got your message!" response after 1-second delay
+      Future.delayed(const Duration(seconds: 1), () {
+        setState(() {
+          _messages.add({
+            'text': 'Got your message!',
+            'isSent': false,
+            'type': 'text',
+            'timestamp': DateTime.now().toLocal().toString().substring(11, 16),
+          });
+        });
+      });
+    }
   }
 
   @override
@@ -155,200 +234,281 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF0E5F85),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        title: Row(
-          children: [
-            CircleAvatar(
-              backgroundImage: AssetImage(widget.contact['image']!),
+        appBar: AppBar(
+          backgroundColor: const Color(0xFF2196F3),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          title: GestureDetector(
+            onTap: () {
+              // Navigate to the ContactInfo screen when tapped
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ContactInfo(contact: widget.contact),
+                ),
+              );
+            },
+            child: Row(
+              children: [
+                CircleAvatar(
+                  backgroundImage: AssetImage(widget.contact['image']!),
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  widget.contact['name']!,
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ],
             ),
-            const SizedBox(width: 10),
-            Text(
-              widget.contact['name']!,
-              style: const TextStyle(color: Colors.white),
+          ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.call_outlined, color: Colors.white),
+              onPressed: () {
+                String userName = widget.contact['name']!;
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AudioCallScreen(
+                      audioImage: widget.contact['image']!,
+                      userName: userName,
+                      callStatus: 'Calling',
+                    ),
+                  ),
+                );
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.videocam_outlined, color: Colors.white),
+              onPressed: () {
+                String userName = widget.contact['name']!;
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => VideoCallScreen(
+                      videoImage: widget.contact['image']!,
+                      userName: userName,
+                      callStatus: 'Calling',
+                    ),
+                  ),
+                );
+              },
             ),
           ],
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.call_outlined, color: Colors.white),
-            onPressed: () {
-              String userName = widget.contact['name']!;
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AudioCallScreen(
-                    audioImage: widget.contact['image']!,
-                    userName: userName,
-                    callStatus: 'Calling',
-                  ),
+        body: Column(
+          children: [
+            Expanded(
+              child: Container(
+                color: Colors.white,
+                child: ListView.builder(
+                  reverse: false,
+                  controller: _scrollController,
+                  itemCount: _messages.length,
+                  itemBuilder: (context, index) {
+                    final message = _messages[index];
+                    return _buildMessageBubble(message);
+                  },
                 ),
-              );
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.videocam_outlined, color: Colors.white),
-            onPressed: () {
-              String userName = widget.contact['name']!;
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => VideoCallScreen(
-                    videoImage: widget.contact['image']!,
-                    userName: userName,
-                    callStatus: 'Calling',
-                  ),
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Container(
-              color: Colors.white,
-              child: ListView.builder(
-                itemCount: _messages.length,
-                reverse: true,
-                itemBuilder: (context, index) {
-                  final message = _messages[_messages.length - 1 - index];
-                  if (message['type'] == 'audio') {
-                    return Align(
-                      alignment: message['isSent']
-                          ? Alignment.centerRight
-                          : Alignment.centerLeft,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            icon: Icon(
-                                _isPlaying ? Icons.pause : Icons.play_arrow),
-                            onPressed: () {
-                              _playAudio(message['filePath']);
-                            },
-                          ),
-                          Text(
-                            message['timestamp'],
-                            style: TextStyle(
-                              color: message['isSent']
-                                  ? Colors.white54
-                                  : Colors.black54,
-                              fontSize: 10,
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  } else if (message['type'] == 'file') {
-                    return Align(
-                      alignment: message['isSent']
-                          ? Alignment.centerRight
-                          : Alignment.centerLeft,
-                      child: TextButton(
-                        onPressed: () {
-                          // Open the file
-                        },
-                        child: Text(
-                          message['text'],
-                          style: TextStyle(
-                            color:
-                                message['isSent'] ? Colors.blue : Colors.black,
-                          ),
-                        ),
-                      ),
-                    );
-                  } else {
-                    return Align(
-                      alignment: message['isSent']
-                          ? Alignment.centerRight
-                          : Alignment.centerLeft,
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 5, horizontal: 10),
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: message['isSent']
-                              ? const Color.fromARGB(255, 14, 95, 133)
-                              : Colors.grey[300],
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              message['text'],
-                              style: TextStyle(
-                                color: message['isSent']
-                                    ? Colors.white
-                                    : Colors.black,
-                              ),
-                            ),
-                            const SizedBox(height: 5),
-                            Text(
-                              message['timestamp'],
-                              style: const TextStyle(
-                                color: Colors.white54,
-                                fontSize: 10,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }
-                },
               ),
             ),
-          ),
-          _buildMessageInput(),
-        ],
-      ),
-    );
+            _buildMessageInput(),
+          ],
+        ));
   }
 
+// Build different types of message bubbles
+  Widget _buildMessageBubble(Map<String, dynamic> message) {
+    bool isSent = message['isSent'] ?? true;
+    String timestamp = message['timestamp'];
+
+    // Handle Text Message
+    if (message['type'] == 'text') {
+      return Align(
+        alignment: isSent ? Alignment.centerRight : Alignment.centerLeft,
+        child: Container(
+          margin: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: isSent ? Colors.blue : Colors.grey[300],
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                message['text'],
+                style: TextStyle(color: isSent ? Colors.white : Colors.black),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                timestamp,
+                style: const TextStyle(fontSize: 10, color: Colors.white70),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    // Handle Image Message
+    else if (message['type'] == 'image') {
+      return Align(
+        alignment: isSent ? Alignment.centerRight : Alignment.centerLeft,
+        child: Column(
+          crossAxisAlignment:
+              isSent ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+          children: [
+            Container(
+              margin: const EdgeInsets.all(10),
+              child: kIsWeb
+                  ? Image.memory(message['fileBytes']!, width: 150, height: 150)
+                  : Image.file(File(message['filePath']!),
+                      width: 150, height: 150),
+            ),
+            Text(timestamp,
+                style: const TextStyle(fontSize: 10, color: Colors.grey)),
+          ],
+        ),
+      );
+    }
+
+    // Handle Video Message
+    else if (message['type'] == 'video') {
+      return Align(
+        alignment: isSent ? Alignment.centerRight : Alignment.centerLeft,
+        child: Column(
+          crossAxisAlignment:
+              isSent ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+          children: [
+            GestureDetector(
+              onTap: () {
+                OpenFile.open(message['filePath']); // Opens the video file
+              },
+              child: Row(
+                children: [
+                  Icon(Icons.video_collection),
+                  const SizedBox(width: 8),
+                  Text(
+                    message['fileName'],
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ),
+            Text("${message['fileSize']} | ${message['duration']}",
+                style: const TextStyle(fontSize: 10, color: Colors.grey)),
+            Text(timestamp,
+                style: const TextStyle(fontSize: 10, color: Colors.grey)),
+          ],
+        ),
+      );
+    }
+
+    // Handle Document Message (PDF, DOCX, XLSX)
+    else if (message['type'] == 'document') {
+      return Align(
+        alignment: isSent ? Alignment.centerRight : Alignment.centerLeft,
+        child: Column(
+          crossAxisAlignment:
+              isSent ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+          children: [
+            GestureDetector(
+              onTap: () {
+                OpenFile.open(message['filePath']); // Opens the document file
+              },
+              child: Row(
+                children: [
+                  Icon(Icons.insert_drive_file),
+                  const SizedBox(width: 8),
+                  Text(
+                    message['fileName'],
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ),
+            Text("${message['fileSize']} | ${message['fileFormat']}",
+                style: const TextStyle(fontSize: 10, color: Colors.grey)),
+            Text(timestamp,
+                style: const TextStyle(fontSize: 10, color: Colors.grey)),
+          ],
+        ),
+      );
+    }
+
+    // Handle Audio Message
+    // Extend _buildMessageBubble to handle audio messages
+    else if (message['type'] == 'audio') {
+      return Align(
+        alignment: isSent ? Alignment.centerRight : Alignment.centerLeft,
+        child: Column(
+          crossAxisAlignment:
+              isSent ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+          children: [
+            Container(
+              margin: const EdgeInsets.all(10),
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: Icon(_isPlaying ? Icons.pause : Icons.play_arrow),
+                    onPressed: () => _playAudio(message['filePath']),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Audio Message',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ),
+            Text(timestamp,
+                style: const TextStyle(fontSize: 10, color: Colors.grey)),
+          ],
+        ),
+      );
+    }
+
+    // Return an empty container if no matching type
+    return Container();
+  }
+
+  // Input field and buttons for sending messages
+// Build the message input bar with text input and microphone icon
   Widget _buildMessageInput() {
     return Container(
-      padding: const EdgeInsets.all(10),
-      color: Colors.white,
+      color: Color(0xFFEDF2FA), // Sets the background color to #EDF2FA
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: Row(
         children: [
           Expanded(
             child: TextField(
               controller: _messageController,
               decoration: InputDecoration(
-                contentPadding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                hintText: 'Type a message',
+                hintText: 'Type a message...',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
-                  borderSide: BorderSide.none,
                 ),
-                filled: true,
-                fillColor: Colors.grey[200],
               ),
             ),
           ),
-          const SizedBox(width: 10),
           IconButton(
-            icon: const Icon(Icons.attach_file, color: Colors.black54),
-            onPressed: _pickFile,
-          ),
-          const SizedBox(width: 5),
-          IconButton(
-            icon: const Icon(Icons.mic, color: Colors.black54),
+            icon: Icon(
+              _isRecording ? Icons.stop : Icons.mic,
+              color: _isRecording ? Colors.red : Colors.blue,
+            ),
             onPressed: _toggleRecording,
           ),
-          const SizedBox(width: 5),
           IconButton(
-            icon: const Icon(Icons.send, color: Color(0xFF0E5F85)),
+            icon: const Icon(Icons.attach_file, color: Colors.blue),
+            onPressed: _pickFile,
+          ),
+          IconButton(
+            icon: const Icon(Icons.send, color: Colors.blue),
             onPressed: _sendMessage,
           ),
         ],

@@ -20,6 +20,8 @@ class _ChatScreenState extends State<ChatScreen> {
       'timestamp': '10:00 AM',
       'unreadCount': '3',
       'image': 'assets/images/sophia.jpg',
+      'bio': 'Creativity Rules the world',
+      'phone': '+234 8036073606',
     },
     {
       'name': 'Bob',
@@ -27,6 +29,8 @@ class _ChatScreenState extends State<ChatScreen> {
       'timestamp': '09:30 AM',
       'unreadCount': '1',
       'image': 'assets/images/Ubong-Peters1.png',
+      'bio': 'Busy',
+      'phone': '+234 8036073606',
     },
     {
       'name': 'Charlie',
@@ -34,6 +38,8 @@ class _ChatScreenState extends State<ChatScreen> {
       'timestamp': 'Yesterday',
       'unreadCount': '5',
       'image': 'assets/images/Paul-Emeka1.png',
+      'bio': 'busy',
+      'phone': '+234 8036073606',
     },
   ];
 
@@ -60,11 +66,36 @@ class _ChatScreenState extends State<ChatScreen> {
 
   // Mock database users
   final List<Map<String, String>> _mockUsers = [
-    {'name': 'David', 'bio': 'busy', 'image': 'assets/images/sophia.jpg'},
-    {'name': 'Emily', 'bio': 'busy', 'image': 'assets/images/james.jpg'},
-    {'name': 'Frank', 'bio': 'busy', 'image': 'assets/images/steven.jpg'},
-    {'name': 'Grace', 'bio': 'busy', 'image': 'assets/images/greg.jpg'},
-    {'name': 'Helen', 'bio': 'busy', 'image': 'assets/images/Paul-Emeka1.png'},
+    {
+      'name': 'David',
+      'bio': 'busy',
+      'phone': '+234 8056783936',
+      'image': 'assets/images/sophia.jpg'
+    },
+    {
+      'name': 'Emily',
+      'bio': 'busy',
+      'phone': '+234 8046946936',
+      'image': 'assets/images/james.jpg'
+    },
+    {
+      'name': 'Frank',
+      'bio': 'busy',
+      'phone': '+234 8036073606',
+      'image': 'assets/images/steven.jpg'
+    },
+    {
+      'name': 'Grace',
+      'bio': 'busy',
+      'phone': '+234 8021528390',
+      'image': 'assets/images/greg.jpg'
+    },
+    {
+      'name': 'Helen',
+      'bio': 'busy',
+      'phone': '+234 8010368836',
+      'image': 'assets/images/Paul-Emeka1.png'
+    },
   ];
 
   // Function to show the modal bottom sheet with users
@@ -271,7 +302,7 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
 
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.grey[200], // Light grey background
+        backgroundColor: const Color(0xFFEDF2FA), // Light grey background
         type: BottomNavigationBarType.fixed, // Fixed navigation bar
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(

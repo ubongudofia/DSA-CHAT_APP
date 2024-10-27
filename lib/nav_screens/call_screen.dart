@@ -204,27 +204,48 @@ class _CallScreenState extends State<CallScreen> {
       appBar: AppBar(
         automaticallyImplyLeading: false, // Removes the back arrow
         backgroundColor: Colors.white,
-        title: Text(
-          'Calls',
-          style: TextStyle(color: Colors.black),
-        ),
-        centerTitle: true,
       ),
       body: Column(
         children: [
+          const Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Text(
+              'Calls',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          // Search bar
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: TextField(
               decoration: InputDecoration(
                 hintText: 'Search name',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                prefixIcon: const Icon(Icons.search),
+                prefixIcon:
+                    const Icon(Icons.search), // Search icon in the text field
               ),
             ),
           ),
-          const SizedBox(height: 10), // Space between search bar and contacts
+          const SizedBox(height: 20),
+          // Padding(
+          //   padding: const EdgeInsets.all(16.0),
+          //   child: TextField(
+          //     decoration: InputDecoration(
+          //       hintText: 'Search name',
+          //       border: OutlineInputBorder(
+          //         borderRadius: BorderRadius.circular(10.0),
+          //       ),
+          //       prefixIcon: const Icon(Icons.search),
+          //     ),
+          //   ),
+          // ),
+          // const SizedBox(height: 10), // Space between search bar and contacts
 
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -344,7 +365,7 @@ class _CallScreenState extends State<CallScreen> {
         child: Icon(Icons.add_call, color: Colors.white),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.grey[200], // Light grey background
+        backgroundColor: const Color(0xFFEDF2FA), // Light grey background
         type: BottomNavigationBarType.fixed, // Fixed navigation bar
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(

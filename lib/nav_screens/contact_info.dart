@@ -1,44 +1,22 @@
 import 'package:flutter/material.dart';
+import './audio_call_screen.dart';
+import './video_call_screen.dart';
 
-class SettingsScreen extends StatefulWidget {
-  @override
-  _SettingsScreenState createState() => _SettingsScreenState();
-}
+class ContactInfo extends StatelessWidget {
+  final Map<String, String> contact;
 
-class _SettingsScreenState extends State<SettingsScreen> {
-  int _selectedIndex = 3; // Index for Settings Screen
-
-  // Handle navigation on the bottom bar
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    switch (index) {
-      case 0:
-        Navigator.pushNamed(context, '/chat_screen');
-        break;
-      case 1:
-        Navigator.pushNamed(context, '/call_screen');
-        break;
-      case 2:
-        Navigator.pushNamed(context, '/contact_screens');
-        break;
-      case 3:
-        Navigator.pushNamed(context, '/settings_screen');
-        break;
-    }
-  }
+  const ContactInfo({Key? key, required this.contact}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
+        title: const Center(
+          child: Text("Contact info", style: TextStyle(color: Colors.white)),
         ),
+        backgroundColor: const Color(0xFF2196F3),
+        iconTheme: const IconThemeData(
+            color: Colors.white), // Back arrow color set to white
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -50,15 +28,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
               Center(
                 child: CircleAvatar(
                   radius: 75,
-                  backgroundImage:
-                      AssetImage('assets/images/Ubong-Peters1.png'),
+                  backgroundImage: contact['image'] != null
+                      ? AssetImage(contact['image']!)
+                      : const AssetImage('assets/default_profile.png'),
                 ),
               ),
               const SizedBox(height: 10),
 
               // Display contact's name with a fallback value
               Text(
-                'UBONG UDOFIA',
+                contact['name'] ?? 'No Name Provided',
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -69,12 +48,60 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
               // Display contact's phone number with a fallback value
               Text(
-                '+234 709 6784 945',
+                contact['phone'] ?? 'No Phone Number',
                 style: const TextStyle(
                   fontSize: 18,
                   color: Colors.grey,
                 ),
                 textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 20),
+
+              // Row with icons for call, video call, and search
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _buildIconButton(
+                    icon: Icons.call,
+                    label: 'Call',
+                    iconColor: const Color(0xFF2196F3), // Icon color
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AudioCallScreen(
+                                  audioImage: contact['image']!,
+                                  userName: contact['name']!,
+                                  callStatus: 'Calling',
+                                )),
+                      );
+                    },
+                  ),
+                  _buildIconButton(
+                    icon: Icons.videocam,
+                    label: 'Video Call',
+                    iconColor: const Color(0xFF2196F3), // Icon color
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => VideoCallScreen(
+                                  videoImage: contact['image']!,
+                                  userName: contact['name']!,
+                                  callStatus: 'Calling',
+                                )),
+                      );
+                    },
+                  ),
+                  _buildIconButton(
+                    icon: Icons.search,
+                    label: 'Search',
+                    iconColor: const Color(0xFF2196F3), // Icon color
+                    onPressed: () {
+                      // Add your onPressed functionality for Search here
+                    },
+                  ),
+                ],
               ),
               const SizedBox(height: 30),
 
@@ -87,7 +114,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: Text(
-                  'In God I put my Trust',
+                  contact['bio'] ?? 'No Bio Available',
                   style: const TextStyle(
                     fontSize: 14,
                     color: Colors.grey,
@@ -150,36 +177,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
       ),
       backgroundColor: const Color(0xFFF8F8FA),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color(0xFFEDF2FA),
-        type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
-            label: 'Chat',
+    );
+  }
+
+  // Widget for icons with labels underneath, now includes an onPressed function, custom icon color, and white circular background
+  Widget _buildIconButton(
+      {required IconData icon,
+      required String label,
+      required Color iconColor,
+      required VoidCallback onPressed}) {
+    return Column(
+      children: [
+        CircleAvatar(
+          radius: 30,
+          backgroundColor: Colors.white, // Background color set to white
+          child: IconButton(
+            icon: Icon(icon,
+                color: iconColor, size: 30), // Icon color set to #21963
+            onPressed: onPressed,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.call),
-            label: 'Call',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.contacts),
-            label: 'Contact',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        selectedItemColor: const Color.fromARGB(255, 14, 95, 133),
-        unselectedItemColor: Colors.grey,
-        showUnselectedLabels: true,
-        selectedIconTheme:
-            IconThemeData(size: 30, color: Color.fromARGB(255, 14, 95, 133)),
-        unselectedIconTheme: IconThemeData(size: 24, color: Colors.grey),
-      ),
+        ),
+        const SizedBox(height: 8),
+        Text(label, style: const TextStyle(fontSize: 14, color: Colors.blue)),
+      ],
     );
   }
 
