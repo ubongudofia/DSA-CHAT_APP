@@ -122,7 +122,7 @@ class _EmailOtpScreenState extends State<EmailOtpScreen> {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: const Color(0xFFEDF2FA),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back), // Backward arrow icon
             onPressed: () {
@@ -155,7 +155,7 @@ class _EmailOtpScreenState extends State<EmailOtpScreen> {
                     height: 50,
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(12), // Consistent radius
                       boxShadow: [
                         BoxShadow(
                           color: Colors.grey.withOpacity(0.5),
@@ -182,7 +182,8 @@ class _EmailOtpScreenState extends State<EmailOtpScreen> {
               const SizedBox(height: 20),
 
               // Resend OTP timer and button
-              if (!_canResend) Text('Resend OTP in $_secondsRemaining seconds'),
+              if (!_canResend)
+                Text('Resend OTP in $_secondsRemaining seconds'),
               if (_canResend)
                 TextButton(
                   onPressed: _resendOtp,
@@ -195,7 +196,7 @@ class _EmailOtpScreenState extends State<EmailOtpScreen> {
                 alignment: Alignment.bottomRight,
                 child: FloatingActionButton(
                   onPressed: _submitOtp,
-                  backgroundColor: const Color.fromARGB(255, 14, 95, 133),
+                  backgroundColor: const Color.fromARGB(255, 14, 95, 133), // Consistent button color
                   child: const Icon(
                     Icons.arrow_forward,
                     color: Colors.white,

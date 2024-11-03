@@ -15,29 +15,27 @@ class WelcomeScreen extends StatelessWidget {
               Container(
                 // padding: EdgeInsets.only(top: 150.0),
                 child: Image.asset(
-                  'assets/images/dsa-logo.png',
+                  'assets/images/dhq_logo.png',
                   width: 200,
                 ),
               ),
-              const SizedBox(height: 40),
-              const Center(
-                child: Text(
-                  'AFNCOM',
-                  style: TextStyle(
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue,
-                  ),
+              const SizedBox(height: 20),
+              Container(
+                // padding: EdgeInsets.only(top: 150.0),
+                child: Image.asset(
+                  'assets/images/afncom.png',
+                  width: 100,
                 ),
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 15),
               const Center(
                 child: SizedBox(
                   width: 350,
                   child: Text(
-                    'Defence Space Administration most secured app for the Nigerian Military',
+                    'Armed Forces of Nigeria Messaging App',
                     textAlign: TextAlign.center,
                     style: TextStyle(
+                      fontWeight: FontWeight.bold,
                       fontSize: 22,
                     ),
                   ),
@@ -52,8 +50,8 @@ class WelcomeScreen extends StatelessWidget {
                   style: ButtonStyle(
                     foregroundColor:
                         WidgetStateProperty.all<Color>(Colors.white),
-                    backgroundColor: WidgetStateProperty.all<Color>(
-                        const Color.fromARGB(255, 14, 95, 133)),
+                    backgroundColor:
+                        WidgetStateProperty.all<Color>(const Color(0xFF0D6EFF)),
                     shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15.0),
@@ -94,10 +92,10 @@ class WelcomeScreen extends StatelessWidget {
                   }
                 },
                 child: const Text(
-                  'Already a user? Login',
+                  'Already a user? Signin',
                   style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 22,
+                    //fontWeight: FontWeight.regular,
+                    fontSize: 18,
                     // color: Colors.white,
                     // backgroundColor: const Color.fromARGB(255, 14, 95, 133),
                   ),

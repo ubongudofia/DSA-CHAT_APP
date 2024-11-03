@@ -11,15 +11,17 @@ class ServiceNumberScreen extends StatefulWidget {
 class _ServiceNumberScreenState extends State<ServiceNumberScreen> {
   final TextEditingController _serviceNumberController =
       TextEditingController();
+  bool _isFieldEmpty = false;
 
   void _checkUser() {
     String serviceNumber = _serviceNumberController.text.trim();
 
-    // Check if the input is a valid service number
     if (serviceNumber.isEmpty) {
-      _showEmptyServiceNumberDialog(); // Show error if empty
+      setState(() {
+        _isFieldEmpty = true;
+      });
+      _showEmptyServiceNumberDialog();
     } else {
-      // Add the DSA/CIV/ prefix if it is not provided
       if (!serviceNumber.startsWith('DSA/CIV/')) {
         serviceNumber = 'DSA/CIV/$serviceNumber';
       }
@@ -27,10 +29,9 @@ class _ServiceNumberScreenState extends State<ServiceNumberScreen> {
       final user = MockDatabase.findUserByServiceNumber(serviceNumber);
 
       if (user != null && user.isNotEmpty) {
-        // User exists, navigate to the Name screen
         Navigator.pushNamed(context, '/name', arguments: user);
       } else {
-        _showUserNotFoundDialog(); // Show a popup if the user doesn't exist
+        _showUserNotFoundDialog();
       }
     }
   }
@@ -46,7 +47,7 @@ class _ServiceNumberScreenState extends State<ServiceNumberScreen> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop();
               },
               child: const Text('OK'),
             ),
@@ -66,7 +67,7 @@ class _ServiceNumberScreenState extends State<ServiceNumberScreen> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop();
               },
               child: const Text('OK'),
             ),
@@ -80,13 +81,14 @@ class _ServiceNumberScreenState extends State<ServiceNumberScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFFE6F2FF), // Body background color
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: const Color(0xFFE6F2FF),
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back), // Backward arrow icon
+            icon: const Icon(Icons.arrow_back,
+                color: const Color(0xFF0D6EFF)), // White arrow color
             onPressed: () {
-              Navigator.pop(context); // Navigate back to the previous page
+              Navigator.pop(context);
             },
           ),
         ),
@@ -95,44 +97,71 @@ class _ServiceNumberScreenState extends State<ServiceNumberScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 'Official Service Number' text
-              const Text(
-                'Official Service Number',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 20),
-
-              // Input field with visible outline
+              // White container with rounded corners
               Container(
+                padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(10),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
+                      color: Colors.grey.withOpacity(0.3),
                       spreadRadius: 2,
                       blurRadius: 5,
                       offset: const Offset(0, 3),
                     ),
                   ],
                 ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: TextField(
-                  controller: _serviceNumberController,
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    labelText: 'Enter your service number',
-                  ),
-                  keyboardType: TextInputType.number,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Enter Your Service Number',
+                      style: TextStyle(
+                        color: const Color
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
+                        border: Border.all(
+                          color:
+                              _isFieldEmpty ? Colors.red : Colors.transparent,
+                          width: 1,
+                        ),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      child: TextField(
+                        controller: _serviceNumberController,
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          labelText: 'Service Number',
+                        ),
+                        keyboardType: TextInputType.text,
+                        onChanged: (text) {
+                          setState(() {
+                            _isFieldEmpty = text.trim().isEmpty;
+                          });
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 335), // Pushes the button to the bottom
-
-              // Circular submit button with blue background and white arrow
+              const SizedBox(height: 400), // Pushes the button to the bottom
               Align(
                 alignment: Alignment.bottomRight,
                 child: FloatingActionButton(
@@ -140,7 +169,7 @@ class _ServiceNumberScreenState extends State<ServiceNumberScreen> {
                   backgroundColor: const Color.fromARGB(255, 14, 95, 133),
                   child: const Icon(
                     Icons.arrow_forward,
-                    color: Colors.white, // White arrow icon
+                    color: Colors.white,
                   ),
                 ),
               ),

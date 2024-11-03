@@ -98,16 +98,17 @@ class _PhoneOtpScreenState extends State<PhoneOtpScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFFEDF2FA), // Updated background color
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: const Color(0xFFEDF2FA),
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back), // Backward arrow icon
+            icon: const Icon(Icons.arrow_back,
+                color: Colors.white), // White back arrow
             onPressed: () {
               Navigator.pop(context); // Navigate back to the previous page
             },
           ),
-          elevation: 0, // To match the flat AppBar in the service number screen
+          elevation: 0, // Flat AppBar to match the design
         ),
         body: Padding(
           padding: const EdgeInsets.fromLTRB(30, 150, 30, 0),
@@ -115,16 +116,31 @@ class _PhoneOtpScreenState extends State<PhoneOtpScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // OTP instruction text
-              Text(
-                'Enter the OTP sent to ${user['phone_number']}',
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Text(
+                  'Enter the OTP sent to ${user['phone_number']}',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
 
-              // OTP input fields with white background and shadow
+              // OTP input fields with shadow
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: List.generate(6, (index) {
@@ -138,7 +154,7 @@ class _PhoneOtpScreenState extends State<PhoneOtpScreen> {
                           color: Colors.grey.withOpacity(0.5),
                           spreadRadius: 2,
                           blurRadius: 5,
-                          offset: const Offset(0, 3), // Shadow position
+                          offset: const Offset(0, 3),
                         ),
                       ],
                     ),
@@ -166,7 +182,11 @@ class _PhoneOtpScreenState extends State<PhoneOtpScreen> {
               const SizedBox(height: 20),
 
               // Countdown timer or Resend OTP button
-              if (!_canResend) Text('Resend OTP in $_secondsRemaining seconds'),
+              if (!_canResend)
+                Text(
+                  'Resend OTP in $_secondsRemaining seconds',
+                  style: const TextStyle(fontSize: 16),
+                ),
               if (_canResend)
                 TextButton(
                   onPressed: _resendOtp,

@@ -63,7 +63,7 @@ class _PasswordSetupScreenState extends State<PasswordSetupScreen> {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: const Color(0xFFEDF2FA),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back), // Backward arrow icon
             onPressed: () {

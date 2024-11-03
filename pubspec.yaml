@@ -51,7 +51,7 @@ dev_dependencies:
 
 flutter_native_splash:
   color: "#ffffff"  # Background color for the splash screen
-  image: assets/images/dsa-logo.png  # Path to your splash image
+  image: assets/images/dhq_logo.png  # Path to your splash image
   android: true
   ios: true
   web: false  # If you also want to support web, you can set this to true

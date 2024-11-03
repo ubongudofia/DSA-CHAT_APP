@@ -12,15 +12,14 @@ class EmailScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: const Color(0xFFEDF2FA), // Consistent AppBar color
           leading: IconButton(
             icon: const Icon(Icons.arrow_back), // Backward arrow icon
             onPressed: () {
               Navigator.pop(context); // Navigate back to the previous page
             },
           ),
-          //title: Text('Email', style: TextStyle(color: Colors.black)),
-          elevation: 0, // To match the flat AppBar design
+          elevation: 0, // Flat AppBar to match the design
         ),
         body: Padding(
           padding: const EdgeInsets.fromLTRB(30, 150, 30, 0),
@@ -37,7 +36,7 @@ class EmailScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
 
-              // Input field with read-only email
+              // Input field with read-only email and consistent shadow
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -72,7 +71,8 @@ class EmailScreen extends StatelessWidget {
                     // Simulate sending email OTP and navigate to Email OTP screen
                     Navigator.pushNamed(context, '/email_otp', arguments: user);
                   },
-                  backgroundColor: const Color.fromARGB(255, 14, 95, 133),
+                  backgroundColor: const Color.fromARGB(
+                      255, 14, 95, 133), // Consistent button color
                   child: const Icon(
                     Icons.arrow_forward,
                     color: Colors.white, // White arrow icon

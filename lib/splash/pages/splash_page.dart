@@ -24,7 +24,7 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Center(
         child: Image(
           image: AssetImage(
-              'assets/images/dsa-logo.png'), // Ensure image path is correct
+              'assets/images/dhq_logo.png'), // Ensure image path is correct
         ),
       ),
     );
